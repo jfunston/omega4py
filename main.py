@@ -61,7 +61,9 @@ class Ui(QtWidgets.QMainWindow):
         dlg.show()
 
 if __name__ == '__main__':
-    db = DataManager(r"F:\alpha4v8\BookInv\BOOKINV.DBF")
+    #db = DataManager(r"F:\alpha4v8\BookInv\BOOKINV.DBF")
+    db = DataManager(r"bookinv.db")
+    #db.convertDB()
     app = QtWidgets.QApplication(sys.argv)
     window = Ui()
     app.exec_()
