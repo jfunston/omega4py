@@ -5,6 +5,23 @@ import sys
 
 db = None
 
+class FindDialog(QtWidgets.QDialog):
+    def __init__(self, findCallback, parent=None):
+        super(FindDialog, self).__init__(parent)
+        uic.loadUi('find.ui', self)
+        self.resultCallback = findCallback
+
+        self.setSearchKeyAction = QtWidgets.QAction("Find Record", self)
+        self.setSearchKeyAction.setShortcut('return')
+        self.setSearchKeyAction.triggered.connect(self.setSearchKey)
+        self.addAction(self.setSearchKeyAction)
+
+        self.show()
+
+    def setSearchKey(self):
+        self.resultCallback(self.SearchBox.text())
+        self.accept()
+
 class IndexDialog(QtWidgets.QDialog):
     def __init__(self, resultCallback, parent=None):
         super(IndexDialog, self).__init__(parent)
@@ -12,11 +29,26 @@ class IndexDialog(QtWidgets.QDialog):
         self.resultCallback = resultCallback
 
         self.ByTitleButton.clicked.connect(self.setByTitle)
+        self.ByRecordNumberButton.clicked.connect(self.setByRecordID)
+
+        self.setRecordIDIndexAction = QtWidgets.QAction("Set RecordID Index", self)
+        self.setRecordIDIndexAction.setShortcut('a')
+        self.setRecordIDIndexAction.triggered.connect(self.setByRecordID)
+        self.addAction(self.setRecordIDIndexAction)
+
+        self.setTitleIndexAction = QtWidgets.QAction("Set Title Index", self)
+        self.setTitleIndexAction.setShortcut('b')
+        self.setTitleIndexAction.triggered.connect(self.setByTitle)
+        self.addAction(self.setTitleIndexAction)
 
         self.show()
 
     def setByTitle(self):
-        self.resultCallback("Title")
+        self.resultCallback("TITLE")
+        self.accept()
+
+    def setByRecordID(self):
+        self.resultCallback("RecordID")
         self.accept()
 
 class Ui(QtWidgets.QMainWindow):
@@ -39,11 +71,23 @@ class Ui(QtWidgets.QMainWindow):
         self.previousRecordAction.triggered.connect(self.previousRecord)
         self.addAction(self.previousRecordAction)
 
+        self.changeIndexAction = QtWidgets.QAction("Index Menu", self)
+        self.changeIndexAction .setShortcut('i')
+        self.changeIndexAction.triggered.connect(self.openIndexDialog)
+        self.addAction(self.changeIndexAction)
+
+        self.findAction = QtWidgets.QAction("Find Menu", self)
+        self.findAction .setShortcut('f')
+        self.findAction.triggered.connect(self.openFindDialog)
+        self.FindButton.clicked.connect(self.openFindDialog)
+        self.addAction(self.findAction)
+
         self.show() # Show the GUI
 
     def updateView(self):
         self.titleValue.setText(db.getCurrentRecord()["TITLE"])
         self.authorValue.setText(db.getCurrentRecord()["AUTHORLAST"])
+        self.recordIDValue.setText(str(db.getCurrentRecord()["RecordID"]))
 
     def nextRecord(self):
         db.nextRecord()
@@ -54,10 +98,20 @@ class Ui(QtWidgets.QMainWindow):
         self.updateView()
 
     def setIndex(self, index):
-        self.currentIndex = index
+        db.changeIndex(index)
+        self.updateView()
 
     def openIndexDialog(self):
         dlg = IndexDialog(self.setIndex, self)
+        dlg.show()
+
+    def findRecord(self, search):
+        self.setIndex("TITLE")
+        db.search(search)
+        self.updateView()
+
+    def openFindDialog(self):
+        dlg = FindDialog(self.findRecord, self)
         dlg.show()
 
 if __name__ == '__main__':

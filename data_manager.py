@@ -1,22 +1,42 @@
 from dbfread import DBF
 import sqlite3
+from bisect import bisect_left
+
+class Record():
+    def __init__(self, data):
+        self.data = data
+
+    def __getitem__(self, item):
+        if item == "TITLE":
+            return self.data[1]
+        elif item == "AUTHORLAST":
+            return self.data[2]
+        elif item == "RecordID":
+            return self.data[0]
+        return None
 
 class DataManager():
     def __init__(self, db_name):
-        self.table = DBF(db_name, load=True)
+        #self.table = DBF(db_name, load=True)
+        self.db = sqlite3.connect(db_name)
+        cur = self.db.cursor()
+        self.records = []
+        for record in cur.execute("SELECT * FROM books").fetchall():
+            self.records.append(Record(record))
+        cur.close()
         self.currentID = 0
-        self.validIndexes = ["RecordID", "Title"]
+        self.validIndexes = ["RecordID", "TITLE"]
         self.currentIndex = "RecordID"
 
     def getCurrentRecord(self):
-        return self.table.records[self.currentID]
+        return self.records[self.currentID]
 
     def previousRecord(self):
         if self.currentID != 0:
             self.currentID -= 1
 
     def nextRecord(self):
-        if self.currentID != len(self.table.records) - 1:
+        if self.currentID != len(self.records) - 1:
             self.currentID += 1
 
     def changeIndex(self, index):
@@ -24,25 +44,35 @@ class DataManager():
             return
         if index not in self.validIndexes:
             return
+        self.currentIndex = index
+        lookupValue = self.getCurrentRecord()[index]
+        recordID = self.getCurrentRecord()["RecordID"]
 
-    def makeTitleIndex(self):
-        self.titleIndex = []
-        recordID = 0
-        for record in self.table.records:
-            titleRecord = {}
-            titleRecord['RecordID'] = recordID
-            titleRecord["TitleSort"] = titleRecord["TITLE"].lower()
-            self.titleIndex.append(titleRecord)
-            recordID += 1
+        cur = self.db.cursor()
+        self.records = []
+        order_by = ""
+        if index != "RecordID":
+            order_by = " ORDER BY " + index + " COLLATE NOCASE"
+        for record in cur.execute("SELECT * FROM books" + order_by).fetchall():
+            self.records.append(Record(record))
 
-        self.titleIndex = sorted(self.titleIndex, key=lambda item : item["TitleSort"])
+        if index == "RecordID":
+            self.currentID = recordID - 1
+            return
+
+        self.currentID = bisect_left(self.records, lookupValue.lower(), key= lambda x: x[index].lower())
+        while self.getCurrentRecord()["RecordID"] != recordID:
+            self.currentID += 1
+
+    def search(self, searchKey):
+        self.currentID = bisect_left(self.records, searchKey.lower(), key= lambda x: x["TITLE"].lower())
 
     def convertDB(self):
         con = sqlite3.connect("bookinv.db")
         cur = con.cursor()
         cur.execute('''CREATE TABLE books (RecordID INTEGER PRIMARY KEY, Title TEXT, AuthorLast TEXT, Pub TEXT, AcquisDate TEXT, ISBN TEXT, Subj TEXT, Price REAL, LstSaleDate TEXT, MxNumber INTEGER, NumberSold INTEGER, NumOnOrder INTEGER, BoNumber INTEGER, BackOrder INTEGER, PoNum TEXT, SalesHist TEXT, OrderActiv TEXT, PrevPoNum TEXT, OurPrice REAL, OrderInfo TEXT, Discount REAL, ISBN13 TEXT, PW INTEGER, IPS INTEGER, IngO INTEGER, IngT INTEGER, DoDelete INTEGER)''')
-        cur.execute("CREATE INDEX idx_author ON books(AuthorLast)")
-        cur.execute("CREATE INDEX idx_title ON books(Title)")
+        cur.execute("CREATE INDEX idx_author ON books(AuthorLast COLLATE NOCASE)")
+        cur.execute("CREATE INDEX idx_title ON books(Title COLLATE NOCASE)")
         idx = 1
         for record in self.table.records:
             insertSQL = "INSERT INTO books VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % \
