@@ -1,6 +1,7 @@
 from dbfread import DBF
 import sqlite3
 from bisect import bisect_left
+from datetime import date
 
 class Record():
     def __init__(self, data):
@@ -13,7 +14,21 @@ class Record():
             return self.data[2]
         elif item == "RecordID":
             return self.data[0]
+        elif item == "Subj":
+            return self.data[6]
+        elif item == "Price":
+            return self.data[7]
+        elif item == "LstSaleDate":
+            return self.data[8]
+        elif item == "MxNumber":
+            return self.data[9]
+        elif item == "NumberSold":
+            return self.data[10]
+        elif item == "SalesHist":
+            return self.data[15]
+
         return None
+
 
 class DataManager():
     def __init__(self, db_name):
@@ -38,6 +53,23 @@ class DataManager():
     def nextRecord(self):
         if self.currentID != len(self.records) - 1:
             self.currentID += 1
+
+    def makeSale(self):
+        today = date.today().strftime("%d/%m/%Y")
+        cur = self.db.cursor()
+        update = "UPDATE books SET LstSaleDate = ?, SalesHist = ?, NumberSold = ? WHERE RecordID = ?"
+        hist = self.getCurrentRecord()["SalesHist"] + today + ", "
+        sold = 0
+        if self.getCurrentRecord()["NumberSold"] == None:
+            sold = 1
+        else:
+            sold = self.getCurrentRecord()["NumberSold"] + 1
+        cur.execute(update, (today, hist, str(sold), str(self.getCurrentRecord()["RecordID"])))
+        self.db.commit()
+        cur.execute("SELECT * FROM books WHERE RecordID = ?", (str(self.getCurrentRecord()["RecordID"]),))
+        data = cur.fetchone()
+        self.records[self.currentID] = Record(data)
+
 
     def changeIndex(self, index):
         if index == self.currentIndex:
