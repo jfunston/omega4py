@@ -1,56 +1,48 @@
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
 from data_manager import DataManager
 import sys
 
-db = None
+from util import ui_methods
 
+db = None
+view = None
+
+@ui_methods
 class FindDialog(QtWidgets.QDialog):
     def __init__(self, findCallback, parent=None):
         super(FindDialog, self).__init__(parent)
         uic.loadUi('find.ui', self)
+
         self.resultCallback = findCallback
-
-        self.setSearchKeyAction = QtWidgets.QAction("Find Record", self)
-        self.setSearchKeyAction.setShortcut('return')
-        self.setSearchKeyAction.triggered.connect(self.setSearchKey)
-        self.addAction(self.setSearchKeyAction)
-
+        self.add_qt_action("Find Record", self.set_search_key, 'return')
         self.show()
 
-    def setSearchKey(self):
+    def set_search_key(self):
         self.resultCallback(self.SearchBox.text())
         self.accept()
 
+@ui_methods
 class IndexDialog(QtWidgets.QDialog):
     def __init__(self, resultCallback, parent=None):
         super(IndexDialog, self).__init__(parent)
         uic.loadUi('indexes.ui', self)
+
         self.resultCallback = resultCallback
-
-        self.ByTitleButton.clicked.connect(self.setByTitle)
-        self.ByRecordNumberButton.clicked.connect(self.setByRecordID)
-
-        self.setRecordIDIndexAction = QtWidgets.QAction("Set RecordID Index", self)
-        self.setRecordIDIndexAction.setShortcut('a')
-        self.setRecordIDIndexAction.triggered.connect(self.setByRecordID)
-        self.addAction(self.setRecordIDIndexAction)
-
-        self.setTitleIndexAction = QtWidgets.QAction("Set Title Index", self)
-        self.setTitleIndexAction.setShortcut('b')
-        self.setTitleIndexAction.triggered.connect(self.setByTitle)
-        self.addAction(self.setTitleIndexAction)
-
+        self.add_qt_action("Set RecordID Index", self.set_by_record_id, 'a', self.ByRecordNumberButton)
+        self.add_qt_action("Set Title Index", self.set_by_title, 'b', self.ByTitleButton)
         self.show()
 
-    def setByTitle(self):
+    def set_by_title(self):
         self.resultCallback("TITLE")
         self.accept()
 
-    def setByRecordID(self):
+    def set_by_record_id(self):
         self.resultCallback("RecordID")
         self.accept()
 
+
+@ui_methods
 class BrowseWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(BrowseWindow, self).__init__() # Call the inherited classes __init__ method
@@ -63,102 +55,93 @@ class BrowseWindow(QtWidgets.QMainWindow):
             self.browseTable.setItem(i, 2, QTableWidgetItem(record["Subj"]))
             self.browseTable.setItem(i, 3, QTableWidgetItem(str(record["Price"])))
             i += 1
+        self.browseTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.browseTable.verticalHeader().setVisible(False)
+        self.update_selected()
 
-        self.browseTable.setCurrentCell(db.getCurrentRecord()["RecordID"]-1, 0)
+        self.add_qt_action("Close", self.close, 'escape')
+        self.add_qt_action("Select", self.user_select, 'return')
+
+    def update_selected(self):
+        self.browseTable.setFocus()
+        self.browseTable.selectRow(db.get_current_id())
+
+    def user_select(self):
+        db.set_current_id(self.browseTable.currentRow())
+        view.update_view()
+        self.close()
 
 
-class Ui(QtWidgets.QMainWindow):
+@ui_methods
+class ViewWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        super(Ui, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('main.ui', self) # Load the .ui file
-        self.updateView()
+        super(ViewWindow, self).__init__()
+        uic.loadUi('view.ui', self)
+
         self.currentIndex = "RecordID"
-        self.NextButton.clicked.connect(self.nextRecord)
-        self.PreviousButton.clicked.connect(self.previousRecord)
-        self.IndexButton.clicked.connect(self.openIndexDialog)
+        self.add_qt_action("Next Record", self.next_record, 'down', self.NextButton)
+        self.add_qt_action("Previous Record", self.previous_record, 'up', self.PreviousButton)
+        self.add_qt_action("Index Menu", self.open_index_dialog, 'i', self.IndexButton)
+        self.add_qt_action("Find Menu", self.open_find_dialog, 'f', self.FindButton)
+        self.add_qt_action("Browse Window", self.open_browse_window, 'b', self.BrowseButton)
+        self.add_qt_action("Make Sale", self.make_sale, 's')
 
-        self.nextRecordAction = QtWidgets.QAction("Next Record", self)
-        self.nextRecordAction.setShortcut('down')
-        self.nextRecordAction.triggered.connect(self.nextRecord)
-        self.addAction(self.nextRecordAction)
+        self.browse = None
+        self.update_view()
+        self.show()
 
-        self.previousRecordAction = QtWidgets.QAction("Previous Record", self)
-        self.previousRecordAction.setShortcut('up')
-        self.previousRecordAction.triggered.connect(self.previousRecord)
-        self.addAction(self.previousRecordAction)
+    def update_view(self):
+        self.titleValue.setText(db.get_current_record()["TITLE"])
+        self.authorValue.setText(db.get_current_record()["AUTHORLAST"])
+        self.recordIDValue.setText(str(db.get_current_record()["RecordID"]))
+        self.maxDesiredValue.setText(str(db.get_current_record()["MxNumber"]))
+        self.toOrderValue.setText(str(db.get_current_record()["NumberSold"]))
+        self.lastSaleValue.setText(str(db.get_current_record()["LstSaleDate"]))
+        self.historyValue.setText(str(db.get_current_record()["SalesHist"]))
 
-        self.changeIndexAction = QtWidgets.QAction("Index Menu", self)
-        self.changeIndexAction .setShortcut('i')
-        self.changeIndexAction.triggered.connect(self.openIndexDialog)
-        self.addAction(self.changeIndexAction)
+    def make_sale(self):
+        db.make_sale()
+        self.update_view()
 
-        self.findAction = QtWidgets.QAction("Find Menu", self)
-        self.findAction .setShortcut('f')
-        self.findAction.triggered.connect(self.openFindDialog)
-        self.FindButton.clicked.connect(self.openFindDialog)
-        self.addAction(self.findAction)
+    def next_record(self):
+        db.next_record()
+        self.update_view()
 
-        self.browseAction = QtWidgets.QAction("Browse Window", self)
-        self.browseAction .setShortcut('f')
-        self.browseAction.triggered.connect(self.openBrowseWindow)
-        self.BrowseButton.clicked.connect(self.openBrowseWindow)
-        self.addAction(self.browseAction)
+    def previous_record(self):
+        db.previous_record()
+        self.update_view()
 
-        self.makeSaleAction = QtWidgets.QAction("Make Sale", self)
-        self.makeSaleAction .setShortcut('s')
-        self.makeSaleAction.triggered.connect(self.makeSale)
-        self.addAction(self.makeSaleAction)
+    def set_index(self, index):
+        db.change_index(index)
+        self.browse = None
+        self.update_view()
 
-        self.show() # Show the GUI
-
-    def updateView(self):
-        self.titleValue.setText(db.getCurrentRecord()["TITLE"])
-        self.authorValue.setText(db.getCurrentRecord()["AUTHORLAST"])
-        self.recordIDValue.setText(str(db.getCurrentRecord()["RecordID"]))
-        self.maxDesiredValue.setText(str(db.getCurrentRecord()["MxNumber"]))
-        self.toOrderValue.setText(str(db.getCurrentRecord()["NumberSold"]))
-        self.lastSaleValue.setText(str(db.getCurrentRecord()["LstSaleDate"]))
-        self.historyValue.setText(str(db.getCurrentRecord()["SalesHist"]))
-
-
-    def makeSale(self):
-        db.makeSale()
-        self.updateView()
-
-    def nextRecord(self):
-        db.nextRecord()
-        self.updateView()
-
-    def previousRecord(self):
-        db.previousRecord()
-        self.updateView()
-
-    def setIndex(self, index):
-        db.changeIndex(index)
-        self.updateView()
-
-    def openIndexDialog(self):
-        dlg = IndexDialog(self.setIndex, self)
+    def open_index_dialog(self):
+        dlg = IndexDialog(self.set_index, self)
         dlg.show()
 
-    def findRecord(self, search):
+    def find_record(self, search):
         self.setIndex("TITLE")
         db.search(search)
-        self.updateView()
+        self.update_view()
 
-    def openFindDialog(self):
+    def open_find_dialog(self):
         dlg = FindDialog(self.findRecord, self)
         dlg.show()
 
-    def openBrowseWindow(self):
-        self.browse = BrowseWindow()
+    def open_browse_window(self):
+        if self.browse == None:
+            self.browse = BrowseWindow()
+        self.browse.update_selected()
         self.browse.show()
+        self.browse.activateWindow()
+
 
 if __name__ == '__main__':
     #db = DataManager(r"F:\alpha4v8\BookInv\BOOKINV.DBF")
     db = DataManager(r"bookinv.db")
-    #db.convertDB()
+    #db.convert_db()
     app = QtWidgets.QApplication(sys.argv)
-    window = Ui()
+    view = ViewWindow()
     app.exec_()
 

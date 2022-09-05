@@ -3,6 +3,7 @@ import sqlite3
 from bisect import bisect_left
 from datetime import date
 
+
 class Record():
     def __init__(self, data):
         self.data = data
@@ -32,7 +33,8 @@ class Record():
 
 class DataManager():
     def __init__(self, db_name):
-        #self.table = DBF(db_name, load=True)
+        #self.table = DBF(r"F:\alpha4v8\BookInv\BOOKINV.DBF", load=True)
+        #self.convert_db()
         self.db = sqlite3.connect(db_name)
         cur = self.db.cursor()
         self.records = []
@@ -43,42 +45,47 @@ class DataManager():
         self.validIndexes = ["RecordID", "TITLE"]
         self.currentIndex = "RecordID"
 
-    def getCurrentRecord(self):
+    def get_current_id(self):
+        return self.currentID
+
+    def set_current_id(self, id):
+        self.currentID = id
+
+    def get_current_record(self):
         return self.records[self.currentID]
 
-    def previousRecord(self):
+    def previous_record(self):
         if self.currentID != 0:
             self.currentID -= 1
 
-    def nextRecord(self):
+    def next_record(self):
         if self.currentID != len(self.records) - 1:
             self.currentID += 1
 
-    def makeSale(self):
+    def make_sale(self):
         today = date.today().strftime("%d/%m/%Y")
         cur = self.db.cursor()
         update = "UPDATE books SET LstSaleDate = ?, SalesHist = ?, NumberSold = ? WHERE RecordID = ?"
-        hist = self.getCurrentRecord()["SalesHist"] + today + ", "
+        hist = self.get_current_record()["SalesHist"] + today + ", "
         sold = 0
-        if self.getCurrentRecord()["NumberSold"] == None:
+        if self.get_current_record()["NumberSold"] == None:
             sold = 1
         else:
-            sold = self.getCurrentRecord()["NumberSold"] + 1
-        cur.execute(update, (today, hist, str(sold), str(self.getCurrentRecord()["RecordID"])))
+            sold = self.get_current_record()["NumberSold"] + 1
+        cur.execute(update, (today, hist, str(sold), str(self.get_current_record()["RecordID"])))
         self.db.commit()
-        cur.execute("SELECT * FROM books WHERE RecordID = ?", (str(self.getCurrentRecord()["RecordID"]),))
+        cur.execute("SELECT * FROM books WHERE RecordID = ?", (str(self.get_current_record()["RecordID"]),))
         data = cur.fetchone()
         self.records[self.currentID] = Record(data)
 
-
-    def changeIndex(self, index):
+    def change_index(self, index):
         if index == self.currentIndex:
             return
         if index not in self.validIndexes:
             return
         self.currentIndex = index
-        lookupValue = self.getCurrentRecord()[index]
-        recordID = self.getCurrentRecord()["RecordID"]
+        lookupValue = self.get_current_record()[index]
+        recordID = self.get_current_record()["RecordID"]
 
         cur = self.db.cursor()
         self.records = []
@@ -93,13 +100,13 @@ class DataManager():
             return
 
         self.currentID = bisect_left(self.records, lookupValue.lower(), key= lambda x: x[index].lower())
-        while self.getCurrentRecord()["RecordID"] != recordID:
+        while self.get_current_record()["RecordID"] != recordID:
             self.currentID += 1
 
     def search(self, searchKey):
         self.currentID = bisect_left(self.records, searchKey.lower(), key= lambda x: x["TITLE"].lower())
 
-    def convertDB(self):
+    def convert_db(self):
         con = sqlite3.connect("bookinv.db")
         cur = con.cursor()
         cur.execute('''CREATE TABLE books (RecordID INTEGER PRIMARY KEY, Title TEXT, AuthorLast TEXT, Pub TEXT, AcquisDate TEXT, ISBN TEXT, Subj TEXT, Price REAL, LstSaleDate TEXT, MxNumber INTEGER, NumberSold INTEGER, NumOnOrder INTEGER, BoNumber INTEGER, BackOrder INTEGER, PoNum TEXT, SalesHist TEXT, OrderActiv TEXT, PrevPoNum TEXT, OurPrice REAL, OrderInfo TEXT, Discount REAL, ISBN13 TEXT, PW INTEGER, IPS INTEGER, IngO INTEGER, IngT INTEGER, DoDelete INTEGER)''')
