@@ -1,12 +1,14 @@
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
 from data_manager import DataManager
 import sys
 
 from util import ui_methods
+from view import ViewWindow
 
+main_win = None
 db = None
-view = None
+
 
 @ui_methods
 class FindDialog(QtWidgets.QDialog):
@@ -22,119 +24,43 @@ class FindDialog(QtWidgets.QDialog):
         self.resultCallback(self.SearchBox.text())
         self.accept()
 
-@ui_methods
-class IndexDialog(QtWidgets.QDialog):
-    def __init__(self, resultCallback, parent=None):
-        super(IndexDialog, self).__init__(parent)
-        uic.loadUi('indexes.ui', self)
-
-        self.resultCallback = resultCallback
-        self.add_qt_action("Set RecordID Index", self.set_by_record_id, 'a', self.ByRecordNumberButton)
-        self.add_qt_action("Set Title Index", self.set_by_title, 'b', self.ByTitleButton)
-        self.show()
-
-    def set_by_title(self):
-        self.resultCallback("TITLE")
-        self.accept()
-
-    def set_by_record_id(self):
-        self.resultCallback("RecordID")
-        self.accept()
-
 
 @ui_methods
-class BrowseWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super(BrowseWindow, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('browse.ui', self) # Load the .ui file
-        self.browseTable.setRowCount(len(db.records))
-        i = 0
-        for record in db.records:
-            self.browseTable.setItem(i, 0, QTableWidgetItem(record["TITLE"]))
-            self.browseTable.setItem(i, 1, QTableWidgetItem(record["AUTHORLAST"]))
-            self.browseTable.setItem(i, 2, QTableWidgetItem(record["Subj"]))
-            self.browseTable.setItem(i, 3, QTableWidgetItem(str(record["Price"])))
-            i += 1
-        self.browseTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.browseTable.verticalHeader().setVisible(False)
-        self.update_selected()
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self, db):
+        self.db = db
+        self.view = None
 
-        self.add_qt_action("Close", self.close, 'escape')
-        self.add_qt_action("Select", self.user_select, 'return')
-
-    def update_selected(self):
-        self.browseTable.setFocus()
-        self.browseTable.selectRow(db.get_current_id())
-
-    def user_select(self):
-        db.set_current_id(self.browseTable.currentRow())
-        view.update_view()
-        self.close()
-
-
-@ui_methods
-class ViewWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super(ViewWindow, self).__init__()
-        uic.loadUi('view.ui', self)
+        super(MainWindow, self).__init__()
+        uic.loadUi('main.ui', self)
 
         self.currentIndex = "RecordID"
-        self.add_qt_action("Next Record", self.next_record, 'down', self.NextButton)
-        self.add_qt_action("Previous Record", self.previous_record, 'up', self.PreviousButton)
-        self.add_qt_action("Index Menu", self.open_index_dialog, 'i', self.IndexButton)
-        self.add_qt_action("Find Menu", self.open_find_dialog, 'f', self.FindButton)
-        self.add_qt_action("Browse Window", self.open_browse_window, 'b', self.BrowseButton)
-        self.add_qt_action("Make Sale", self.make_sale, 's')
+        self.add_qt_action("View Records", self.view_records, 'v', self.ViewButton)
+        self.add_qt_action("Search Records", self.search_records, 's', self.SearchButton)
 
-        self.browse = None
         self.update_view()
         self.show()
 
+    def showEvent(self, event: QtGui.QShowEvent) -> None:
+        self.update_view()
+        event.accept()
+
     def update_view(self):
-        self.titleValue.setText(db.get_current_record()["TITLE"])
-        self.authorValue.setText(db.get_current_record()["AUTHORLAST"])
-        self.recordIDValue.setText(str(db.get_current_record()["RecordID"]))
-        self.maxDesiredValue.setText(str(db.get_current_record()["MxNumber"]))
-        self.toOrderValue.setText(str(db.get_current_record()["NumberSold"]))
-        self.lastSaleValue.setText(str(db.get_current_record()["LstSaleDate"]))
-        self.historyValue.setText(str(db.get_current_record()["SalesHist"]))
+        self.recordsInDBValue.setText(str(self.db.get_total_records()))
+        self.recordsInListValue.setText(str(len(self.db.records)))
 
-    def make_sale(self):
-        db.make_sale()
+    def view_records(self):
+        self.view = ViewWindow(self.db, self)
+        self.view.show()
+        self.close()
+
+    def search_callback(self, searchKey):
+        self.db.substring_search(searchKey)
         self.update_view()
 
-    def next_record(self):
-        db.next_record()
-        self.update_view()
-
-    def previous_record(self):
-        db.previous_record()
-        self.update_view()
-
-    def set_index(self, index):
-        db.change_index(index)
-        self.browse = None
-        self.update_view()
-
-    def open_index_dialog(self):
-        dlg = IndexDialog(self.set_index, self)
-        dlg.show()
-
-    def find_record(self, search):
-        self.setIndex("TITLE")
-        db.search(search)
-        self.update_view()
-
-    def open_find_dialog(self):
-        dlg = FindDialog(self.findRecord, self)
-        dlg.show()
-
-    def open_browse_window(self):
-        if self.browse == None:
-            self.browse = BrowseWindow()
-        self.browse.update_selected()
-        self.browse.show()
-        self.browse.activateWindow()
+    def search_records(self):
+        find = FindDialog(self.search_callback, self)
+        find.show()
 
 
 if __name__ == '__main__':
@@ -142,6 +68,5 @@ if __name__ == '__main__':
     db = DataManager(r"bookinv.db")
     #db.convert_db()
     app = QtWidgets.QApplication(sys.argv)
-    view = ViewWindow()
+    main_win = MainWindow(db)
     app.exec_()
-

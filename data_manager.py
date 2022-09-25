@@ -27,7 +27,8 @@ class Record():
             return self.data[10]
         elif item == "SalesHist":
             return self.data[15]
-
+        elif item == "OrderActiv":
+            return self.data[16]
         return None
 
 
@@ -44,6 +45,10 @@ class DataManager():
         self.currentID = 0
         self.validIndexes = ["RecordID", "TITLE"]
         self.currentIndex = "RecordID"
+        self.totalRecords = len(self.records)
+
+    def get_total_records(self):
+        return self.totalRecords
 
     def get_current_id(self):
         return self.currentID
@@ -65,14 +70,14 @@ class DataManager():
     def make_sale(self):
         today = date.today().strftime("%d/%m/%Y")
         cur = self.db.cursor()
-        update = "UPDATE books SET LstSaleDate = ?, SalesHist = ?, NumberSold = ? WHERE RecordID = ?"
-        hist = self.get_current_record()["SalesHist"] + today + ", "
+        update = "UPDATE books SET LstSaleDate = ?, SalesHist = ?, NumberSold = ?, OrderActiv = ? WHERE RecordID = ?"
+        hist = self.get_current_record()["SalesHist"] + " " + today + ","
         sold = 0
-        if self.get_current_record()["NumberSold"] == None:
+        if self.get_current_record()["NumberSold"] is None:
             sold = 1
         else:
             sold = self.get_current_record()["NumberSold"] + 1
-        cur.execute(update, (today, hist, str(sold), str(self.get_current_record()["RecordID"])))
+        cur.execute(update, (today, hist, str(sold), "200", str(self.get_current_record()["RecordID"])))
         self.db.commit()
         cur.execute("SELECT * FROM books WHERE RecordID = ?", (str(self.get_current_record()["RecordID"]),))
         data = cur.fetchone()
@@ -105,6 +110,17 @@ class DataManager():
 
     def search(self, searchKey):
         self.currentID = bisect_left(self.records, searchKey.lower(), key= lambda x: x["TITLE"].lower())
+
+    def substring_search(self, searchKey):
+        like = "%" + searchKey + "%"
+        self.currentID = 0
+        self.currentIndex = "Search"
+
+        cur = self.db.cursor()
+        self.records = []
+        order_by = " ORDER BY Title COLLATE NOCASE"
+        for record in cur.execute("SELECT * FROM books WHERE Title LIKE ?" + order_by, (like,)).fetchall():
+            self.records.append(Record(record))
 
     def convert_db(self):
         con = sqlite3.connect("bookinv.db")
