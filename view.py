@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
 from util import ui_methods
+from enter import EnterWindow
 
 
 @ui_methods
@@ -85,19 +86,24 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Index Menu", self.open_index_dialog, 'i', self.IndexButton)
         self.add_qt_action("Find Menu", self.open_find_dialog, 'f', self.FindButton)
         self.add_qt_action("Browse Window", self.open_browse_window, 'b', self.BrowseButton)
+        #self.add_qt_action("Change", self.change_window, 'c', self.ChangeButton)
+        self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
         self.add_qt_action("Make Sale", self.make_sale, 's')
 
         self.browse = None
+        self.enter_window = None
         self.update_view()
         self.show()
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
-        self.main_win.show()
+        if self.enter_window is None:
+            self.main_win.show()
         event.accept()
 
     def update_view(self):
         self.titleValue.setText(self.db.get_current_record()["TITLE"])
         self.authorValue.setText(self.db.get_current_record()["AUTHORLAST"])
+        self.ISBNValue.setText(self.db.get_current_record()["ISBN"])
         self.recordIDValue.setText(str(self.db.get_current_record()["RecordID"]))
         self.maxDesiredValue.setText(str(self.db.get_current_record()["MxNumber"]))
         self.toOrderValue.setText(str(self.db.get_current_record()["NumberSold"]))
@@ -141,3 +147,8 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.browse.update_selected()
         self.browse.show()
         self.browse.activateWindow()
+
+    def open_enter_window(self):
+        self.browse = None
+        self.enter_window = EnterWindow(self.db, self)
+        self.close()

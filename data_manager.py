@@ -13,6 +13,8 @@ class Record():
             return self.data[1]
         elif item == "AUTHORLAST":
             return self.data[2]
+        elif item == "ISBN":
+            return self.data[5]
         elif item == "RecordID":
             return self.data[0]
         elif item == "Subj":
@@ -56,6 +58,14 @@ class DataManager():
     def set_current_id(self, id):
         self.currentID = id
 
+    def get_max_record_id(self):
+        query = "SELECT MAX(RecordId) FROM books"
+        cur = self.db.cursor()
+        cur.execute(query)
+        data = cur.fetchone()
+        cur.close()
+        return data[0]
+
     def get_current_record(self):
         return self.records[self.currentID]
 
@@ -82,10 +92,9 @@ class DataManager():
         cur.execute("SELECT * FROM books WHERE RecordID = ?", (str(self.get_current_record()["RecordID"]),))
         data = cur.fetchone()
         self.records[self.currentID] = Record(data)
+        cur.close()
 
     def change_index(self, index):
-        if index == self.currentIndex:
-            return
         if index not in self.validIndexes:
             return
         self.currentIndex = index
@@ -99,7 +108,9 @@ class DataManager():
             order_by = " ORDER BY " + index + " COLLATE NOCASE"
         for record in cur.execute("SELECT * FROM books" + order_by).fetchall():
             self.records.append(Record(record))
+        cur.close()
 
+        # TODO handle deletes
         if index == "RecordID":
             self.currentID = recordID - 1
             return
@@ -121,6 +132,36 @@ class DataManager():
         order_by = " ORDER BY Title COLLATE NOCASE"
         for record in cur.execute("SELECT * FROM books WHERE Title LIKE ?" + order_by, (like,)).fetchall():
             self.records.append(Record(record))
+        cur.close()
+
+    def insert_record(self, record):
+        record["RecordID"] = self.get_max_record_id() + 1
+        text_fields = ["Title", "AuthorLast", "Pub", "AcquisDate", "ISBN", "Subj", "LstSaleDate", "PoNum", "SalesHist", "OrderActiv", "PrevPoNum", "OrderInfo", "ISBN13"]
+        int_fields = ["MxNumber", "NumberSold", "NumOnOrder", "BoNumber", "BackOrder", "PW", "IPS", "IngO", "IngT", "DoDelete"]
+        float_fields = ["Price", "OurPrice", "Discount"]
+        for text_field in text_fields:
+            if text_field not in record.keys():
+                record[text_field] = ""
+        for int_field in int_fields:
+            if int_field not in record.keys():
+                record[int_field] = 0
+        for float_field in float_fields:
+            if float_field not in record.keys():
+                record[float_field] = 0.0
+
+        cur = self.db.cursor()
+        cur.execute("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (record["RecordID"], record["Title"], record["AuthorLast"], record["Pub"], record["AcquisDate"], record["ISBN"],
+                    record["Subj"], \
+                    record["Price"], record["LstSaleDate"], record["MxNumber"], record["NumberSold"],
+                    record["NumOnOrder"], record["BoNumber"], \
+                    record["BackOrder"], record["PoNum"], record["SalesHist"], record["OrderActiv"],
+                    record["PrevPoNum"], record["OurPrice"], \
+                    record["OrderInfo"], record["Discount"], record["ISBN13"], record["PW"], record["IPS"],
+                    record["IngO"], \
+                    record["IngT"], record["DoDelete"]))
+        self.db.commit()
+        cur.close()
 
     def convert_db(self):
         con = sqlite3.connect("bookinv.db")
