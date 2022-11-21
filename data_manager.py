@@ -1,4 +1,3 @@
-from dbfread import DBF
 import sqlite3
 from bisect import bisect_left
 from datetime import date
@@ -38,16 +37,20 @@ class DataManager():
     def __init__(self, db_name):
         #self.table = DBF(r"F:\alpha4v8\BookInv\BOOKINV.DBF", load=True)
         #self.convert_db()
-        self.db = sqlite3.connect(db_name)
-        cur = self.db.cursor()
-        self.records = []
-        for record in cur.execute("SELECT * FROM books").fetchall():
-            self.records.append(Record(record))
-        cur.close()
-        self.currentID = 0
-        self.validIndexes = ["RecordID", "TITLE"]
-        self.currentIndex = "RecordID"
-        self.totalRecords = len(self.records)
+        try:
+            self.db = sqlite3.connect(db_name)
+            cur = self.db.cursor()
+            self.records = []
+            for record in cur.execute("SELECT * FROM books").fetchall():
+                self.records.append(Record(record))
+            cur.close()
+            self.currentID = 0
+            self.validIndexes = ["RecordID", "TITLE"]
+            self.currentIndex = "RecordID"
+            self.totalRecords = len(self.records)
+        except:
+            self.totalRecords = 0
+            self.record = []
 
     def get_total_records(self):
         return self.totalRecords

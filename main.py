@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets, uic, QtGui
-from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView, QFileDialog
 from data_manager import DataManager
+from dbfread import DBF
 import sys
 
 from util import ui_methods
@@ -37,6 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.currentIndex = "RecordID"
         self.add_qt_action("View Records", self.view_records, 'v', self.ViewButton)
         self.add_qt_action("Search Records", self.search_records, 's', self.SearchButton)
+        self.add_qt_action("Load A4 DB", self.load_a4_db, 'l', self.LoadA4Button)
 
         self.update_view()
         self.show()
@@ -48,6 +50,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_view(self):
         self.recordsInDBValue.setText(str(self.db.get_total_records()))
         self.recordsInListValue.setText(str(len(self.db.records)))
+
+    def load_a4_db(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Select A4 DBF file", "", "DBF Files (*.DBF)")
+        self.db.table = DBF(file_name, load=True)
+        self.db.convert_db()
+        self.db = DataManager(r"bookinv.db")
 
     def view_records(self):
         self.view = ViewWindow(self.db, self)
@@ -64,9 +72,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
-    #db = DataManager(r"F:\alpha4v8\BookInv\BOOKINV.DBF")
     db = DataManager(r"bookinv.db")
-    #db.convert_db()
     app = QtWidgets.QApplication(sys.argv)
     main_win = MainWindow(db)
     app.exec_()
