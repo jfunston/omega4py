@@ -110,6 +110,8 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.lastSaleValue.setText(str(self.db.get_current_record()["LstSaleDate"]))
         self.historyValue.setText(str(self.db.get_current_record()["SalesHist"]))
         self.orderStatusValue.setText(self.db.get_current_record()["OrderActiv"])
+        if self.browse is not None:
+            self.browse.update_selected();
 
     def make_sale(self):
         self.db.make_sale()
@@ -143,7 +145,7 @@ class ViewWindow(QtWidgets.QMainWindow):
 
     def open_browse_window(self):
         if self.browse == None:
-            self.browse = BrowseWindow()
+            self.browse = BrowseWindow(self.db, self)
         self.browse.update_selected()
         self.browse.show()
         self.browse.activateWindow()
