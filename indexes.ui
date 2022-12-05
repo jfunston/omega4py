@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>436</width>
-    <height>327</height>
+    <height>373</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>30</y>
+     <y>10</y>
      <width>351</width>
      <height>51</height>
     </rect>
@@ -40,7 +40,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>100</y>
+     <y>70</y>
      <width>351</width>
      <height>51</height>
     </rect>
@@ -53,7 +53,87 @@
     </font>
    </property>
    <property name="text">
-    <string>B..TITLE</string>
+    <string>B..Title</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ByAuthorLastButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>130</y>
+     <width>351</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>C..AuthorLast</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BySubjTitleButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>190</y>
+     <width>351</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>D..Subj+Title</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ByPubTitleButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>250</y>
+     <width>351</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>E..Pub+Title</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ByOrderActivButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>310</y>
+     <width>351</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>F..OrderActiv</string>
    </property>
   </widget>
  </widget>

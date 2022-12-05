@@ -28,16 +28,35 @@ class IndexDialog(QtWidgets.QDialog):
         self.resultCallback = resultCallback
         self.add_qt_action("Set RecordID Index", self.set_by_record_id, 'a', self.ByRecordNumberButton)
         self.add_qt_action("Set Title Index", self.set_by_title, 'b', self.ByTitleButton)
+        self.add_qt_action("Set AuthorLast Index", self.set_by_authorlast, 'c', self.ByAuthorLastButton)
+        self.add_qt_action("Set Subj+Title Index", self.set_by_subjtitle, 'd', self.BySubjTitleButton)
+        self.add_qt_action("Set Pub+Title Index", self.set_by_pubtitle, 'e', self.ByPubTitleButton)
+        self.add_qt_action("Set OrderActiv Index", self.set_by_orderactiv, 'f', self.ByOrderActivButton)
         self.show()
 
     def set_by_title(self):
-        self.resultCallback("TITLE")
+        self.resultCallback("Title")
         self.accept()
 
     def set_by_record_id(self):
         self.resultCallback("RecordID")
         self.accept()
 
+    def set_by_authorlast(self):
+        self.resultCallback("AuthorLast")
+        self.accept()
+
+    def set_by_subjtitle(self):
+        self.resultCallback("Subj+Title")
+        self.accept()
+
+    def set_by_pubtitle(self):
+        self.resultCallback("Pub+Title")
+        self.accept()
+
+    def set_by_orderactiv(self):
+        self.resultCallback("OrderActiv")
+        self.accept()
 
 @ui_methods
 class BrowseWindow(QtWidgets.QMainWindow):
@@ -50,8 +69,8 @@ class BrowseWindow(QtWidgets.QMainWindow):
         self.browseTable.setRowCount(len(db.records))
         i = 0
         for record in db.records:
-            self.browseTable.setItem(i, 0, QTableWidgetItem(record["TITLE"]))
-            self.browseTable.setItem(i, 1, QTableWidgetItem(record["AUTHORLAST"]))
+            self.browseTable.setItem(i, 0, QTableWidgetItem(record["Title"]))
+            self.browseTable.setItem(i, 1, QTableWidgetItem(record["AuthorLast"]))
             self.browseTable.setItem(i, 2, QTableWidgetItem(record["Subj"]))
             self.browseTable.setItem(i, 3, QTableWidgetItem(str(record["Price"])))
             i += 1
@@ -101,8 +120,8 @@ class ViewWindow(QtWidgets.QMainWindow):
         event.accept()
 
     def update_view(self):
-        self.titleValue.setText(self.db.get_current_record()["TITLE"])
-        self.authorValue.setText(self.db.get_current_record()["AUTHORLAST"])
+        self.titleValue.setText(self.db.get_current_record()["Title"])
+        self.authorValue.setText(self.db.get_current_record()["AuthorLast"])
         self.ISBNValue.setText(self.db.get_current_record()["ISBN"])
         self.recordIDValue.setText(str(self.db.get_current_record()["RecordID"]))
         self.maxDesiredValue.setText(str(self.db.get_current_record()["MxNumber"]))
@@ -110,6 +129,8 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.lastSaleValue.setText(str(self.db.get_current_record()["LstSaleDate"]))
         self.historyValue.setText(str(self.db.get_current_record()["SalesHist"]))
         self.orderStatusValue.setText(self.db.get_current_record()["OrderActiv"])
+        if self.browse is not None:
+            self.browse.update_selected();
 
     def make_sale(self):
         self.db.make_sale()
@@ -143,7 +164,7 @@ class ViewWindow(QtWidgets.QMainWindow):
 
     def open_browse_window(self):
         if self.browse == None:
-            self.browse = BrowseWindow()
+            self.browse = BrowseWindow(self.db, self)
         self.browse.update_selected()
         self.browse.show()
         self.browse.activateWindow()

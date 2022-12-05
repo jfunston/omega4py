@@ -8,10 +8,12 @@ class Record():
         self.data = data
 
     def __getitem__(self, item):
-        if item == "TITLE":
+        if item == "Title":
             return self.data[1]
-        elif item == "AUTHORLAST":
+        elif item == "AuthorLast":
             return self.data[2]
+        elif item == "Pub":
+            return self.data[3]
         elif item == "ISBN":
             return self.data[5]
         elif item == "RecordID":
@@ -45,7 +47,7 @@ class DataManager():
                 self.records.append(Record(record))
             cur.close()
             self.currentID = 0
-            self.validIndexes = ["RecordID", "TITLE"]
+            self.validIndexes = ["RecordID", "Title", "AuthorLast", "Subj+Title", "Pub+Title", "OrderActiv"]
             self.currentIndex = "RecordID"
             self.totalRecords = len(self.records)
         except:
@@ -101,14 +103,18 @@ class DataManager():
         if index not in self.validIndexes:
             return
         self.currentIndex = index
-        lookupValue = self.get_current_record()[index]
+        lookupValue = self.get_current_record()[index.split('+')[0]]
         recordID = self.get_current_record()["RecordID"]
 
         cur = self.db.cursor()
         self.records = []
         order_by = ""
         if index != "RecordID":
-            order_by = " ORDER BY " + index + " COLLATE NOCASE"
+            order_by = " ORDER BY "
+            index_parts = index.split('+')
+            for index_part in index_parts:
+                order_by += index_part + " COLLATE NOCASE, "
+            order_by = order_by[:-2]
         for record in cur.execute("SELECT * FROM books" + order_by).fetchall():
             self.records.append(Record(record))
         cur.close()
@@ -118,12 +124,12 @@ class DataManager():
             self.currentID = recordID - 1
             return
 
-        self.currentID = bisect_left(self.records, lookupValue.lower(), key= lambda x: x[index].lower())
+        self.currentID = bisect_left(self.records, lookupValue.lower(), key= lambda x: x[index.split('+')[0]].lower())
         while self.get_current_record()["RecordID"] != recordID:
             self.currentID += 1
 
     def search(self, searchKey):
-        self.currentID = bisect_left(self.records, searchKey.lower(), key= lambda x: x["TITLE"].lower())
+        self.currentID = bisect_left(self.records, searchKey.lower(), key= lambda x: x["Title"].lower())
 
     def substring_search(self, searchKey):
         like = "%" + searchKey + "%"
@@ -134,6 +140,22 @@ class DataManager():
         self.records = []
         order_by = " ORDER BY Title COLLATE NOCASE"
         for record in cur.execute("SELECT * FROM books WHERE Title LIKE ?" + order_by, (like,)).fetchall():
+            self.records.append(Record(record))
+        cur.close()
+
+    def ordercode_search(self, search):
+        where = ""
+        if search == "200":
+            where = "OrderActiv = 200"
+        elif search == "":
+            where = 'OrderActiv != ""'
+        self.currentID = 0
+        self.currentIndex = "Search"
+
+        cur = self.db.cursor()
+        self.records = []
+        order_by = " ORDER BY Title COLLATE NOCASE"
+        for record in cur.execute("SELECT * FROM books WHERE " + where + order_by).fetchall():
             self.records.append(Record(record))
         cur.close()
 
@@ -172,6 +194,10 @@ class DataManager():
         cur.execute('''CREATE TABLE books (RecordID INTEGER PRIMARY KEY, Title TEXT, AuthorLast TEXT, Pub TEXT, AcquisDate TEXT, ISBN TEXT, Subj TEXT, Price REAL, LstSaleDate TEXT, MxNumber INTEGER, NumberSold INTEGER, NumOnOrder INTEGER, BoNumber INTEGER, BackOrder INTEGER, PoNum TEXT, SalesHist TEXT, OrderActiv TEXT, PrevPoNum TEXT, OurPrice REAL, OrderInfo TEXT, Discount REAL, ISBN13 TEXT, PW INTEGER, IPS INTEGER, IngO INTEGER, IngT INTEGER, DoDelete INTEGER)''')
         cur.execute("CREATE INDEX idx_author ON books(AuthorLast COLLATE NOCASE)")
         cur.execute("CREATE INDEX idx_title ON books(Title COLLATE NOCASE)")
+        cur.execute("CREATE INDEX idx_isbn ON books(ISBN COLLATE NOCASE)")
+        cur.execute("CREATE INDEX idx_subj_title ON books(Subj COLLATE NOCASE, Title COLLATE NOCASE)")
+        cur.execute("CREATE INDEX idx_pub_title ON books(Pub COLLATE NOCASE, Title COLLATE NOCASE)")
+        cur.execute("CREATE INDEX idx_orderactiv ON books(OrderActiv COLLATE NOCASE)")
         idx = 1
         for record in self.table.records:
             insertSQL = "INSERT INTO books VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % \
