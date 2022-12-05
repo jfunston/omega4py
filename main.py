@@ -38,6 +38,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.currentIndex = "RecordID"
         self.add_qt_action("View Records", self.view_records, 'v', self.ViewButton)
         self.add_qt_action("Search Records", self.search_records, 's', self.SearchButton)
+        self.add_qt_action("List 200 Order Code", self.ordercode_200, '', self.List200Button)
+        self.add_qt_action("List Non-Empty Order Code", self.ordercode_nonempty, '', self.ListNonEmptyOrderButton)
         self.add_qt_action("Load A4 DB", self.load_a4_db, 'l', self.LoadA4Button)
 
         self.update_view()
@@ -64,6 +66,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def search_callback(self, searchKey):
         self.db.substring_search(searchKey)
+        self.update_view()
+
+    def ordercode_200(self):
+        self.db.ordercode_search("200")
+        self.update_view()
+
+    def ordercode_nonempty(self):
+        self.db.ordercode_search("")
         self.update_view()
 
     def search_records(self):

@@ -143,6 +143,22 @@ class DataManager():
             self.records.append(Record(record))
         cur.close()
 
+    def ordercode_search(self, search):
+        where = ""
+        if search == "200":
+            where = "OrderActiv = 200"
+        elif search == "":
+            where = 'OrderActiv != ""'
+        self.currentID = 0
+        self.currentIndex = "Search"
+
+        cur = self.db.cursor()
+        self.records = []
+        order_by = " ORDER BY Title COLLATE NOCASE"
+        for record in cur.execute("SELECT * FROM books WHERE " + where + order_by).fetchall():
+            self.records.append(Record(record))
+        cur.close()
+
     def insert_record(self, record):
         record["RecordID"] = self.get_max_record_id() + 1
         text_fields = ["Title", "AuthorLast", "Pub", "AcquisDate", "ISBN", "Subj", "LstSaleDate", "PoNum", "SalesHist", "OrderActiv", "PrevPoNum", "OrderInfo", "ISBN13"]
