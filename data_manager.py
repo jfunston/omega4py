@@ -8,16 +8,18 @@ class Record():
         self.data = data
 
     def __getitem__(self, item):
-        if item == "Title":
+        if item == "RecordID":
+            return self.data[0]
+        elif item == "Title":
             return self.data[1]
         elif item == "AuthorLast":
             return self.data[2]
         elif item == "Pub":
             return self.data[3]
+        elif item == "AcquisDate":
+            return self.data[4]
         elif item == "ISBN":
             return self.data[5]
-        elif item == "RecordID":
-            return self.data[0]
         elif item == "Subj":
             return self.data[6]
         elif item == "Price":
@@ -28,10 +30,36 @@ class Record():
             return self.data[9]
         elif item == "NumberSold":
             return self.data[10]
+        elif item == "NumOnOrder":
+            return self.data[11]
+        elif item == "BoNumber":
+            return self.data[12]
+        elif item == "BackOrder":
+            return self.data[13]
+        elif item == "PoNum":
+            return self.data[14]
         elif item == "SalesHist":
             return self.data[15]
         elif item == "OrderActiv":
             return self.data[16]
+        elif item == "PrevPoNum":
+            return self.data[17]
+        #elif item == "OurPrice":
+        #    return self.data[18]
+        elif item == "OrderInfo":
+            return self.data[19]
+        #elif item == "Discount":
+        #    return self.data[20]
+        #elif item == "ISBN13":
+        #    return self.data[21]
+        elif item == "PW":
+            return self.data[22]
+        elif item == "IPS":
+            return self.data[23]
+        elif item == "IngO":
+            return self.data[24]
+        elif item == "IngT":
+            return self.data[25]
         return None
 
 

@@ -119,16 +119,42 @@ class ViewWindow(QtWidgets.QMainWindow):
             self.main_win.show()
         event.accept()
 
+    def pretty_bool(self, inval):
+        if inval is None:
+            inval = ""
+        elif inval == 1:
+            inval = "y"
+        else:
+            inval = "n"
+        return inval
+
     def update_view(self):
-        self.titleValue.setText(self.db.get_current_record()["Title"])
-        self.authorValue.setText(self.db.get_current_record()["AuthorLast"])
-        self.ISBNValue.setText(self.db.get_current_record()["ISBN"])
-        self.recordIDValue.setText(str(self.db.get_current_record()["RecordID"]))
-        self.maxDesiredValue.setText(str(self.db.get_current_record()["MxNumber"]))
-        self.toOrderValue.setText(str(self.db.get_current_record()["NumberSold"]))
-        self.lastSaleValue.setText(str(self.db.get_current_record()["LstSaleDate"]))
-        self.historyValue.setText(str(self.db.get_current_record()["SalesHist"]))
-        self.orderStatusValue.setText(self.db.get_current_record()["OrderActiv"])
+        record = self.db.get_current_record()
+        self.titleValue.setText(record["Title"])
+        self.authorValue.setText(record["AuthorLast"])
+        self.ISBNValue.setText(record["ISBN"])
+        self.recordIDValue.setText(str(record["RecordID"]))
+        self.maxDesiredValue.setText(str(record["MxNumber"]))
+        self.toOrderValue.setText(str(record["NumberSold"]))
+        self.lastSaleValue.setText(str(record["LstSaleDate"]))
+        self.historyValue.setText(str(record["SalesHist"]))
+        self.orderStatusValue.setText(record["OrderActiv"])
+        self.SubjectValue.setText(record["Subj"])
+        self.AcqDateValue.setText(record["AcquisDate"])
+        price = record["Price"]
+        if price is not None:
+            price = "%.2f" % price
+        else:
+            price = ""
+        self.PriceValue.setText(price)
+        self.PublisherValueLabel.setText(record["Pub"])
+        self.IngOValue.setText(self.pretty_bool(record["IngO"]))
+        self.IngTValue.setText(self.pretty_bool(record["IngT"]))
+        self.IPSValue.setText(self.pretty_bool(record["IPS"]))
+        self.POValue.setText(str(record["PoNum"]))
+        self.PrevPOValue.setText(str(record["PrevPoNum"]))
+        self.OnOrderValue.setText(str(record["NumOnOrder"]))
+        self.BOValue.setText(str(record["BoNumber"]))
         if self.browse is not None:
             self.browse.update_selected();
 

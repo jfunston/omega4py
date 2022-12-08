@@ -419,19 +419,6 @@
      <string>Browse</string>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="orderStatusBox">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>210</y>
-      <width>261</width>
-      <height>81</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="ChangeButton">
     <property name="geometry">
      <rect>
@@ -470,22 +457,6 @@
     </property>
     <property name="text">
      <string>Enter</string>
-    </property>
-   </widget>
-   <widget class="QPlainTextEdit" name="centerBox">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>300</y>
-      <width>541</width>
-      <height>161</height>
-     </rect>
-    </property>
-    <property name="lineWidth">
-     <number>1</number>
     </property>
    </widget>
    <widget class="QFrame" name="CenterFrame">
@@ -650,7 +621,7 @@
       <string>IPS:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="yesNoLabel1">
+    <widget class="QLabel" name="IngOValue">
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -668,7 +639,7 @@
       <string>y/n</string>
      </property>
     </widget>
-    <widget class="QLabel" name="yesNoLabel1_2">
+    <widget class="QLabel" name="IngTValue">
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -686,7 +657,7 @@
       <string>y/n</string>
      </property>
     </widget>
-    <widget class="QLabel" name="yesNoLabel1_3">
+    <widget class="QLabel" name="IPSValue">
      <property name="geometry">
       <rect>
        <x>60</x>
@@ -817,7 +788,7 @@
    <widget class="QLabel" name="AcqDateValue">
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>580</x>
       <y>10</y>
       <width>231</width>
       <height>31</height>
@@ -1014,47 +985,6 @@
      <string>BO Value</string>
     </property>
    </widget>
-   <zorder>orderStatusBox</zorder>
-   <zorder>PreviousButton</zorder>
-   <zorder>NextButton</zorder>
-   <zorder>titleLabel</zorder>
-   <zorder>titleValue</zorder>
-   <zorder>authorLabel</zorder>
-   <zorder>authorValue</zorder>
-   <zorder>IndexButton</zorder>
-   <zorder>recordIDValue</zorder>
-   <zorder>recordLabel</zorder>
-   <zorder>FindButton</zorder>
-   <zorder>historyLabel</zorder>
-   <zorder>historyValue</zorder>
-   <zorder>lastSaleLabel</zorder>
-   <zorder>lastSaleValue</zorder>
-   <zorder>maxDesiredLabel</zorder>
-   <zorder>numberSoldLabel</zorder>
-   <zorder>toOrderLable</zorder>
-   <zorder>maxDesiredValue</zorder>
-   <zorder>numberSoldValue</zorder>
-   <zorder>toOrderValue</zorder>
-   <zorder>BrowseButton</zorder>
-   <zorder>ChangeButton</zorder>
-   <zorder>EnterButton</zorder>
-   <zorder>centerBox</zorder>
-   <zorder>CenterFrame</zorder>
-   <zorder>priceLabel</zorder>
-   <zorder>PriceValue</zorder>
-   <zorder>OrderFrame</zorder>
-   <zorder>InitialAqusitionLabel</zorder>
-   <zorder>AcqDateValue</zorder>
-   <zorder>SubjectLabel</zorder>
-   <zorder>SubjectValue</zorder>
-   <zorder>POLabel</zorder>
-   <zorder>PrevPOLabel_2</zorder>
-   <zorder>NumOnOrderLabel</zorder>
-   <zorder>NumBackorderLabel</zorder>
-   <zorder>POValue</zorder>
-   <zorder>PrevPOValue</zorder>
-   <zorder>OnOrderValue</zorder>
-   <zorder>BOValue</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
