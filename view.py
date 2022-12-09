@@ -156,7 +156,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.OnOrderValue.setText(str(record["NumOnOrder"]))
         self.BOValue.setText(str(record["BoNumber"]))
         if self.browse is not None:
-            self.browse.update_selected();
+            self.browse.update_selected()
 
     def make_sale(self):
         self.db.make_sale()
