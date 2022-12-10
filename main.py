@@ -25,6 +25,23 @@ class FindDialog(QtWidgets.QDialog):
         self.resultCallback(self.SearchBox.text())
         self.accept()
 
+@ui_methods
+class FindReplaceDialog(QtWidgets.QDialog):
+    def __init__(self, db, parent=None):
+        super(FindReplaceDialog, self).__init__(parent)
+        uic.loadUi('replace.ui', self)
+        self.db = db
+
+        self.add_qt_action("Find Replace", self.find_replace, 'return')
+        self.show()
+
+    def find_replace(self):
+        changed = self.db.count_search(self.fieldComboBox.currentText(), self.findBox.text())
+        confirm = QtWidgets.QMessageBox
+        ret = confirm.question(self, 'Search Replace Confirmation', f"Are you sure? This will affect {changed} record(s).", confirm.Yes | confirm.No)
+        if ret == confirm.Yes:
+            self.db.find_replace(self.fieldComboBox.currentText(), self.findBox.text(), self.replaceBox.text())
+        self.accept()
 
 @ui_methods
 class MainWindow(QtWidgets.QMainWindow):
@@ -40,6 +57,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Search Records", self.search_records, 's', self.SearchButton)
         self.add_qt_action("List 200 Order Code", self.ordercode_200, '', self.List200Button)
         self.add_qt_action("List Non-Empty Order Code", self.ordercode_nonempty, '', self.ListNonEmptyOrderButton)
+        self.add_qt_action("Find Replace", self.find_replace, '', self.FindReplaceButton)
         self.add_qt_action("Load A4 DB", self.load_a4_db, 'l', self.LoadA4Button)
 
         self.update_view()
@@ -79,6 +97,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def search_records(self):
         find = FindDialog(self.search_callback, self)
         find.show()
+
+    def find_replace(self):
+        replace = FindReplaceDialog(self.db, self)
+        replace.show()
 
 
 if __name__ == '__main__':

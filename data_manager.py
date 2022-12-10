@@ -171,6 +171,24 @@ class DataManager():
             self.records.append(Record(record))
         cur.close()
 
+    def count_search(self, field, searchKey):
+        query = "SELECT COUNT(*) FROM books WHERE " + field + " = ?"
+        cur = self.db.cursor()
+        result = cur.execute(query, (searchKey,)).fetchall()
+        cur.close()
+        return result[0][0]
+
+    def find_replace(self, field, searchKey, replace):
+        query = f"UPDATE books SET {field} = ? WHERE {field} = ?"
+        cur = self.db.cursor()
+        cur.execute(query, (replace, searchKey)).fetchall()
+        self.db.commit()
+        cur.close()
+        prvIndex = self.currentIndex
+        self.currentIndex = "tmp"
+        self.change_index(prvIndex)
+
+
     def ordercode_search(self, search):
         where = ""
         if search == "200":
