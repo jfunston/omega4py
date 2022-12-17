@@ -107,6 +107,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Browse Window", self.open_browse_window, 'b', self.BrowseButton)
         #self.add_qt_action("Change", self.change_window, 'c', self.ChangeButton)
         self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
+        self.add_qt_action("Delete", self.delete_record, '', self.DeleteButton)
         self.add_qt_action("Make Sale", self.make_sale, 's')
 
         self.browse = None
@@ -180,9 +181,16 @@ class ViewWindow(QtWidgets.QMainWindow):
         dlg.show()
 
     def find_record(self, search):
-        self.set_index("TITLE")
+        self.set_index("Title")
         self.db.search(search)
         self.update_view()
+
+    def delete_record(self):
+        confirm = QtWidgets.QMessageBox
+        ret = confirm.question(self, 'Delete Confirmation', f"Are you sure? This will delete the record.", confirm.Yes | confirm.No)
+        if ret == confirm.Yes:
+            self.db.delete_current_record()
+            self.update_view()
 
     def open_find_dialog(self):
         dlg = FindDialog(self.find_record, self)

@@ -147,17 +147,27 @@ class DataManager():
             self.records.append(Record(record))
         cur.close()
 
-        # TODO handle deletes
         if index == "RecordID":
-            self.currentID = recordID - 1
-            return
-
-        self.currentID = bisect_left(self.records, lookupValue.lower(), key= lambda x: x[index.split('+')[0]].lower())
+            self.currentID = bisect_left(self.records, lookupValue, key= lambda x: x[index.split('+')[0]])
+        else:
+            self.currentID = bisect_left(self.records, lookupValue.lower(), key= lambda x: x[index.split('+')[0]].lower())
         while self.get_current_record()["RecordID"] != recordID:
             self.currentID += 1
 
     def search(self, searchKey):
         self.currentID = bisect_left(self.records, searchKey.lower(), key= lambda x: x["Title"].lower())
+
+    def delete_current_record(self):
+        # TODO snapshot
+        cur = self.db.cursor()
+        cur.execute("DELETE FROM books WHERE RecordID = " + str(self.get_current_record()["RecordID"]))
+        self.db.commit()
+        cur.close()
+        del self.records[self.currentID]
+        if self.currentID >= len(self.records):
+            self.currentID = len(self.records) - 1
+        self.totalRecords -= 1
+
 
     def substring_search(self, searchKey):
         like = "%" + searchKey + "%"
