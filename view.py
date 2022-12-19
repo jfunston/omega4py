@@ -32,6 +32,7 @@ class IndexDialog(QtWidgets.QDialog):
         self.add_qt_action("Set Subj+Title Index", self.set_by_subjtitle, 'd', self.BySubjTitleButton)
         self.add_qt_action("Set Pub+Title Index", self.set_by_pubtitle, 'e', self.ByPubTitleButton)
         self.add_qt_action("Set OrderActiv Index", self.set_by_orderactiv, 'f', self.ByOrderActivButton)
+        self.add_qt_action("Set ISBN Index", self.set_by_isbn, 'g', self.ByISBNButton)
         self.show()
 
     def set_by_title(self):
@@ -56,6 +57,10 @@ class IndexDialog(QtWidgets.QDialog):
 
     def set_by_orderactiv(self):
         self.resultCallback("OrderActiv")
+        self.accept()
+
+    def set_by_isbn(self):
+        self.resultCallback("ISBN")
         self.accept()
 
 @ui_methods

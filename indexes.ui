@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>436</width>
-    <height>373</height>
+    <height>433</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -134,6 +134,26 @@
    </property>
    <property name="text">
     <string>F..OrderActiv</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ByISBNButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>370</y>
+     <width>351</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>G..ISBN</string>
    </property>
   </widget>
  </widget>

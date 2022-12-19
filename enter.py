@@ -24,6 +24,7 @@ class EnterWindow(QtWidgets.QMainWindow):
         record["ISBN"] = self.ISBNEdit.toPlainText()
         self.db.insert_record(record)
         self.view_window.set_index("RecordID")
+        # TODO max+1 of RecordID
         self.db.set_current_id(len(self.db.records)-1)
         self.view_window.update_view()
         self.view_window.show()

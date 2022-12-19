@@ -75,7 +75,7 @@ class DataManager():
                 self.records.append(Record(record))
             cur.close()
             self.currentID = 0
-            self.validIndexes = ["RecordID", "Title", "AuthorLast", "Subj+Title", "Pub+Title", "OrderActiv"]
+            self.validIndexes = ["RecordID", "Title", "AuthorLast", "Subj+Title", "Pub+Title", "OrderActiv", "ISBN"]
             self.currentIndex = "RecordID"
             self.totalRecords = len(self.records)
         except:
@@ -114,7 +114,19 @@ class DataManager():
         today = date.today().strftime("%d/%m/%Y")
         cur = self.db.cursor()
         update = "UPDATE books SET LstSaleDate = ?, SalesHist = ?, NumberSold = ?, OrderActiv = ? WHERE RecordID = ?"
-        hist = self.get_current_record()["SalesHist"] + " " + today + ","
+        hist = ""
+        if self.get_current_record()["SalesHist"].find(today) == -1:
+            hist = today +", " + self.get_current_record()["SalesHist"]
+        elif self.get_current_record()["SalesHist"].find(today + " (") == -1:
+            split = self.get_current_record()["SalesHist"].split(',', 1)
+            hist = today + " (2)," + split[1]
+        else:
+            split = self.get_current_record()["SalesHist"].split('(', 1)
+            num_split = split[1].split(')', 1)
+            count = int(num_split[0])
+            count += 1
+            split = self.get_current_record()["SalesHist"].split(',', 1)
+            hist = today + " (" + str(count) + ")," + split[1]
         sold = 0
         if self.get_current_record()["NumberSold"] is None:
             sold = 1
