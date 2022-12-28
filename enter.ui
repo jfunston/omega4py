@@ -80,98 +80,6 @@
      <string>(Esc)Forget</string>
     </property>
    </widget>
-   <widget class="QLabel" name="historyValue">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>540</y>
-      <width>1091</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Default History</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="AcqDateValue">
-    <property name="geometry">
-     <rect>
-      <x>580</x>
-      <y>0</y>
-      <width>231</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Default mm/dd/yyyy</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="SubjectValue">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>50</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Default Subject</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="PrevPOValue">
-    <property name="geometry">
-     <rect>
-      <x>890</x>
-      <y>200</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Prev PO Value</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="NumOnOrderLabel">
     <property name="geometry">
      <rect>
@@ -188,27 +96,6 @@
     </property>
     <property name="text">
      <string># On Order:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="PriceValue">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>130</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Default Price</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
     </property>
    </widget>
    <widget class="QLabel" name="titleLabel">
@@ -265,27 +152,6 @@
      <string>Prev. PO#:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="OnOrderValue">
-    <property name="geometry">
-     <rect>
-      <x>900</x>
-      <y>230</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>OO Value</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="priceLabel">
     <property name="geometry">
      <rect>
@@ -340,27 +206,6 @@
      <string>Subject:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lastSaleValue">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>450</y>
-      <width>271</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Default Last Sale</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="historyLabel">
     <property name="geometry">
      <rect>
@@ -397,27 +242,6 @@
     <property name="lineWidth">
      <number>2</number>
     </property>
-    <widget class="QLabel" name="ISBNValue">
-     <property name="geometry">
-      <rect>
-       <x>220</x>
-       <y>120</y>
-       <width>321</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Default ISBN (13 Characters)</string>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-     </property>
-    </widget>
     <widget class="QLabel" name="ISBNLabel">
      <property name="geometry">
       <rect>
@@ -496,7 +320,7 @@
        <x>20</x>
        <y>70</y>
        <width>71</width>
-       <height>21</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -514,7 +338,7 @@
        <x>20</x>
        <y>100</y>
        <width>41</width>
-       <height>21</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -526,75 +350,27 @@
       <string>IPS:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="IngOValue">
+    <widget class="QLineEdit" name="ISBNValue">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>120</y>
+       <width>321</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="IngoOValue">
      <property name="geometry">
       <rect>
        <x>90</x>
        <y>40</y>
-       <width>41</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>y/n</string>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="IngTValue">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>70</y>
-       <width>41</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>y/n</string>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="IPSValue">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>100</y>
-       <width>41</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>y/n</string>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="PublisherValue">
-     <property name="geometry">
-      <rect>
-       <x>330</x>
-       <y>10</y>
-       <width>191</width>
+       <width>31</width>
        <height>31</height>
       </rect>
      </property>
@@ -603,11 +379,35 @@
        <pointsize>18</pointsize>
       </font>
      </property>
-     <property name="text">
-      <string>Default Publisher</string>
+    </widget>
+    <widget class="QLineEdit" name="IngTValue">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>70</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
      </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="IPSValue">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>100</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
      </property>
     </widget>
    </widget>
@@ -645,27 +445,6 @@
     </property>
     <property name="text">
      <string>Record:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="POValue">
-    <property name="geometry">
-     <rect>
-      <x>890</x>
-      <y>170</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>PO Value</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
     </property>
    </widget>
    <widget class="QLabel" name="POLabel">
@@ -720,27 +499,6 @@
     </property>
     <property name="text">
      <string>Last Sale Date:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="BOValue">
-    <property name="geometry">
-     <rect>
-      <x>900</x>
-      <y>260</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>BO Value</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
     </property>
    </widget>
    <widget class="QLabel" name="InitialAqusitionLabel">
@@ -854,27 +612,6 @@
       <string>Order Activity Status:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="orderStatusValue">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>231</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Default Status</string>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextSelectableByMouse</set>
-     </property>
-    </widget>
    </widget>
    <widget class="QLineEdit" name="titleValue">
     <property name="geometry">
@@ -928,6 +665,171 @@
       <y>340</y>
       <width>41</width>
       <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lastSaleValue">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>450</y>
+      <width>181</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="SubjectValue">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>50</y>
+      <width>181</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="AcqDateValue">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>0</y>
+      <width>221</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="PriceValue">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>130</y>
+      <width>181</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="OrderStatusValue">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>230</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="PublisherValue">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>300</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="POValue">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>170</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="PrevPOValue">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>200</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="OnOrderValue">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>230</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="BOValue">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>260</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="historyValue">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>540</y>
+      <width>1081</width>
+      <height>121</height>
      </rect>
     </property>
     <property name="font">
