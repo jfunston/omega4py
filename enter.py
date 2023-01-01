@@ -1,10 +1,10 @@
 from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
-from util import ui_methods
+from util import ui_methods, pretty_int, pretty_bool
 
 @ui_methods
 class EnterWindow(QtWidgets.QMainWindow):
-    def __init__(self, db, view_window):
+    def __init__(self, db, view_window, in_record=None):
         self.db = db
         self.view_window = view_window
 
@@ -38,12 +38,48 @@ class EnterWindow(QtWidgets.QMainWindow):
         default_style = self.recordIDValue.styleSheet()
         for label in self.allLabels:
             label.setStyleSheet("background-color: lightblue; border: 1px solid black;")
-            label.setText("")
+            try:
+                label.setText("")
+            except:
+                label.setPlainText("")
         self.recordIDValue.setStyleSheet(default_style)
 
-        self.recordID = self.db.get_max_record_id() + 1
+        self.edit_mode = False
+        if in_record is None:
+            self.recordID = self.db.get_max_record_id() + 1
+        else:
+            self.recordID = in_record["RecordID"]
+            self.edit_mode = True
+            self.update_fields(in_record)
         self.recordIDValue.setText(str(self.recordID))
         self.show()
+
+    def update_fields(self, record):
+        self.titleValue.setText(record["Title"])
+        self.authorValue.setText(record["AuthorLast"])
+        self.ISBNValue.setText(record["ISBN"])
+        self.recordIDValue.setText(str(record["RecordID"]))
+        self.maxDesiredValue.setText(pretty_int(record["MxNumber"]))
+        self.toOrderValue.setText(pretty_int(record["NumberSold"]))
+        self.lastSaleValue.setText(record["LstSaleDate"])
+        self.historyValue.setPlainText(record["SalesHist"])
+        self.OrderStatusValue.setText(record["OrderActiv"])
+        self.SubjectValue.setText(record["Subj"])
+        self.AcqDateValue.setText(record["AcquisDate"])
+        price = record["Price"]
+        if price is not None:
+            price = "%.2f" % price
+        else:
+            price = ""
+        self.PriceValue.setText(price)
+        self.PublisherValue.setText(record["Pub"])
+        self.IngOValue.setText(pretty_bool(record["IngO"]))
+        self.IngTValue.setText(pretty_bool(record["IngT"]))
+        self.IPSValue.setText(pretty_bool(record["IPS"]))
+        self.POValue.setText(record["PoNum"])
+        self.PrevPOValue.setText(record["PrevPoNum"])
+        self.OnOrderValue.setText(pretty_int(record["NumOnOrder"]))
+        self.BOValue.setText(pretty_int(record["BoNumber"]))
 
     def yn_to_int(self, value, value_name):
         if value == 'y' or value == 'Y' or value == '1':
@@ -77,6 +113,7 @@ class EnterWindow(QtWidgets.QMainWindow):
 
     def save_record(self):
         record = {}
+        record["RecordID"] = self.recordID
         record["Title"] = self.titleValue.text()
         record["AuthorLast"] = self.authorValue.text()
         record["Pub"] = self.PublisherValue.text()
@@ -85,7 +122,7 @@ class EnterWindow(QtWidgets.QMainWindow):
         record["Subj"] = self.SubjectValue.text()
         record["LstSaleDate"] = self.lastSaleValue.text()
         record["PoNum"] = self.POValue.text()
-        record["SalesHist"] = self.historyValue.text()
+        record["SalesHist"] = self.historyValue.toPlainText()
         record["OrderActiv"] = self.OrderStatusValue.text()
         record["PrevPoNum"] = self.PrevPOValue.text()
         try:
@@ -106,9 +143,12 @@ class EnterWindow(QtWidgets.QMainWindow):
             self.msgbox.show()
             return
 
-        self.db.insert_record(record)
-        self.view_window.set_index("RecordID")
-        self.db.set_current_id(len(self.db.records)-1)
+        if self.edit_mode:
+            self.db.update_record(record)
+        else:
+            self.db.insert_record(record)
+            self.view_window.set_index("RecordID")
+            self.db.set_current_id(len(self.db.records)-1)
         self.view_window.update_view()
         self.view_window.show()
         self.close()

@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
-from util import ui_methods
+from util import ui_methods, pretty_int, pretty_bool
 from enter import EnterWindow
 
 
@@ -110,7 +110,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Index Menu", self.open_index_dialog, 'i', self.IndexButton)
         self.add_qt_action("Find Menu", self.open_find_dialog, 'f', self.FindButton)
         self.add_qt_action("Browse Window", self.open_browse_window, 'b', self.BrowseButton)
-        #self.add_qt_action("Change", self.change_window, 'c', self.ChangeButton)
+        self.add_qt_action("Change", self.open_change_window, 'c', self.ChangeButton)
         self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
         self.add_qt_action("Delete", self.delete_record, '', self.DeleteButton)
         self.add_qt_action("Make Sale", self.make_sale, 's')
@@ -125,28 +125,14 @@ class ViewWindow(QtWidgets.QMainWindow):
             self.main_win.show()
         event.accept()
 
-    def pretty_bool(self, inval):
-        if inval is None:
-            inval = ""
-        elif inval == 1:
-            inval = "y"
-        else:
-            inval = "n"
-        return inval
-
-    def pretty_int(self, inval):
-        if inval is None:
-            return ""
-        return str(inval)
-
     def update_view(self):
         record = self.db.get_current_record()
         self.titleValue.setText(record["Title"])
         self.authorValue.setText(record["AuthorLast"])
         self.ISBNValue.setText(record["ISBN"])
         self.recordIDValue.setText(str(record["RecordID"]))
-        self.maxDesiredValue.setText(self.pretty_int(record["MxNumber"]))
-        self.toOrderValue.setText(self.pretty_int(record["NumberSold"]))
+        self.maxDesiredValue.setText(pretty_int(record["MxNumber"]))
+        self.toOrderValue.setText(pretty_int(record["NumberSold"]))
         self.lastSaleValue.setText(record["LstSaleDate"])
         self.historyValue.setText(record["SalesHist"])
         self.orderStatusValue.setText(record["OrderActiv"])
@@ -159,13 +145,13 @@ class ViewWindow(QtWidgets.QMainWindow):
             price = ""
         self.PriceValue.setText(price)
         self.PublisherValueLabel.setText(record["Pub"])
-        self.IngOValue.setText(self.pretty_bool(record["IngO"]))
-        self.IngTValue.setText(self.pretty_bool(record["IngT"]))
-        self.IPSValue.setText(self.pretty_bool(record["IPS"]))
+        self.IngOValue.setText(pretty_bool(record["IngO"]))
+        self.IngTValue.setText(pretty_bool(record["IngT"]))
+        self.IPSValue.setText(pretty_bool(record["IPS"]))
         self.POValue.setText(record["PoNum"])
         self.PrevPOValue.setText(record["PrevPoNum"])
-        self.OnOrderValue.setText(self.pretty_int(record["NumOnOrder"]))
-        self.BOValue.setText(self.pretty_int(record["BoNumber"]))
+        self.OnOrderValue.setText(pretty_int(record["NumOnOrder"]))
+        self.BOValue.setText(pretty_int(record["BoNumber"]))
         if self.browse is not None:
             self.browse.update_selected()
 
@@ -216,4 +202,9 @@ class ViewWindow(QtWidgets.QMainWindow):
     def open_enter_window(self):
         self.browse = None
         self.enter_window = EnterWindow(self.db, self)
+        self.close()
+
+    def open_change_window(self):
+        self.browse = None
+        self.enter_window = EnterWindow(self.db, self, self.db.get_current_record())
         self.close()

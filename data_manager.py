@@ -63,6 +63,22 @@ class Record():
         return None
 
 
+def regularize_user_record(record):
+    text_fields = ["Title", "AuthorLast", "Pub", "AcquisDate", "ISBN", "Subj", "LstSaleDate", "PoNum", "SalesHist", "OrderActiv", "PrevPoNum", "OrderInfo", "ISBN13"]
+    int_fields = ["MxNumber", "NumberSold", "NumOnOrder", "BoNumber", "BackOrder", "PW", "IPS", "IngO", "IngT", "DoDelete"]
+    float_fields = ["Price", "OurPrice", "Discount"]
+    for text_field in text_fields:
+        if text_field not in record.keys():
+            record[text_field] = None
+    for int_field in int_fields:
+        if int_field not in record.keys():
+            record[int_field] = None
+    for float_field in float_fields:
+        if float_field not in record.keys():
+            record[float_field] = None
+    return record
+
+
 class DataManager():
     def __init__(self, db_name):
         #self.table = DBF(r"F:\alpha4v8\BookInv\BOOKINV.DBF", load=True)
@@ -110,6 +126,12 @@ class DataManager():
         if self.currentID != len(self.records) - 1:
             self.currentID += 1
 
+    def refresh_cur_record(self):
+        cur = self.db.cursor()
+        cur.execute("SELECT * FROM books WHERE RecordID = ?", (str(self.get_current_record()["RecordID"]),))
+        data = cur.fetchone()
+        self.records[self.currentID] = Record(data)
+
     def make_sale(self):
         today = date.today().strftime("%d/%m/%Y")
         cur = self.db.cursor()
@@ -135,10 +157,8 @@ class DataManager():
             sold = self.get_current_record()["NumberSold"] + 1
         cur.execute(update, (today, hist, str(sold), "200", str(self.get_current_record()["RecordID"])))
         self.db.commit()
-        cur.execute("SELECT * FROM books WHERE RecordID = ?", (str(self.get_current_record()["RecordID"]),))
-        data = cur.fetchone()
-        self.records[self.currentID] = Record(data)
         cur.close()
+        self.refresh_cur_record()
 
     def change_index(self, index):
         if index not in self.validIndexes:
@@ -210,7 +230,6 @@ class DataManager():
         self.currentIndex = "tmp"
         self.change_index(prvIndex)
 
-
     def ordercode_search(self, search):
         where = ""
         if search == "200":
@@ -229,18 +248,7 @@ class DataManager():
 
     def insert_record(self, record):
         record["RecordID"] = self.get_max_record_id() + 1
-        text_fields = ["Title", "AuthorLast", "Pub", "AcquisDate", "ISBN", "Subj", "LstSaleDate", "PoNum", "SalesHist", "OrderActiv", "PrevPoNum", "OrderInfo", "ISBN13"]
-        int_fields = ["MxNumber", "NumberSold", "NumOnOrder", "BoNumber", "BackOrder", "PW", "IPS", "IngO", "IngT", "DoDelete"]
-        float_fields = ["Price", "OurPrice", "Discount"]
-        for text_field in text_fields:
-            if text_field not in record.keys():
-                record[text_field] = None
-        for int_field in int_fields:
-            if int_field not in record.keys():
-                record[int_field] = None
-        for float_field in float_fields:
-            if float_field not in record.keys():
-                record[float_field] = None
+        record = regularize_user_record(record)
 
         cur = self.db.cursor()
         cur.execute("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -255,6 +263,24 @@ class DataManager():
                     record["IngT"], record["DoDelete"]))
         self.db.commit()
         cur.close()
+
+    def update_record(self, record):
+        record = regularize_user_record(record)
+
+        cur = self.db.cursor()
+        cur.execute("UPDATE books SET Title = ?, AuthorLast = ?, Pub = ?, AcquisDate = ?, ISBN = ?, Subj = ?, Price = ?, LstSaleDate = ?, MxNumber = ?, NumberSold = ?, NumOnOrder = ?, BoNumber = ?, BackOrder = ?, PoNum = ?, SalesHist = ?, OrderActiv = ?, PrevPoNum = ?, OurPrice = ?, OrderInfo = ?, Discount = ?, ISBN13 = ?, PW = ?, IPS = ?, IngO = ?, IngT = ?, DoDelete = ? WHERE RecordID = ?",
+                    (record["Title"], record["AuthorLast"], record["Pub"], record["AcquisDate"], record["ISBN"],
+                    record["Subj"], \
+                    record["Price"], record["LstSaleDate"], record["MxNumber"], record["NumberSold"],
+                    record["NumOnOrder"], record["BoNumber"], \
+                    record["BackOrder"], record["PoNum"], record["SalesHist"], record["OrderActiv"],
+                    record["PrevPoNum"], record["OurPrice"], \
+                    record["OrderInfo"], record["Discount"], record["ISBN13"], record["PW"], record["IPS"],
+                    record["IngO"], \
+                    record["IngT"], record["DoDelete"], record["RecordID"]))
+        self.db.commit()
+        cur.close()
+        self.refresh_cur_record()
 
     def convert_db(self):
         con = sqlite3.connect("bookinv.db")

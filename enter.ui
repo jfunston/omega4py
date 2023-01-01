@@ -823,7 +823,7 @@
      </font>
     </property>
    </widget>
-   <widget class="QLineEdit" name="historyValue">
+   <widget class="QPlainTextEdit" name="historyValue">
     <property name="geometry">
      <rect>
       <x>10</x>
