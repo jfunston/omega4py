@@ -134,16 +134,21 @@ class ViewWindow(QtWidgets.QMainWindow):
             inval = "n"
         return inval
 
+    def pretty_int(self, inval):
+        if inval is None:
+            return ""
+        return str(inval)
+
     def update_view(self):
         record = self.db.get_current_record()
         self.titleValue.setText(record["Title"])
         self.authorValue.setText(record["AuthorLast"])
         self.ISBNValue.setText(record["ISBN"])
         self.recordIDValue.setText(str(record["RecordID"]))
-        self.maxDesiredValue.setText(str(record["MxNumber"]))
-        self.toOrderValue.setText(str(record["NumberSold"]))
-        self.lastSaleValue.setText(str(record["LstSaleDate"]))
-        self.historyValue.setText(str(record["SalesHist"]))
+        self.maxDesiredValue.setText(self.pretty_int(record["MxNumber"]))
+        self.toOrderValue.setText(self.pretty_int(record["NumberSold"]))
+        self.lastSaleValue.setText(record["LstSaleDate"])
+        self.historyValue.setText(record["SalesHist"])
         self.orderStatusValue.setText(record["OrderActiv"])
         self.SubjectValue.setText(record["Subj"])
         self.AcqDateValue.setText(record["AcquisDate"])
@@ -157,10 +162,10 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.IngOValue.setText(self.pretty_bool(record["IngO"]))
         self.IngTValue.setText(self.pretty_bool(record["IngT"]))
         self.IPSValue.setText(self.pretty_bool(record["IPS"]))
-        self.POValue.setText(str(record["PoNum"]))
-        self.PrevPOValue.setText(str(record["PrevPoNum"]))
-        self.OnOrderValue.setText(str(record["NumOnOrder"]))
-        self.BOValue.setText(str(record["BoNumber"]))
+        self.POValue.setText(record["PoNum"])
+        self.PrevPOValue.setText(record["PrevPoNum"])
+        self.OnOrderValue.setText(self.pretty_int(record["NumOnOrder"]))
+        self.BOValue.setText(self.pretty_int(record["BoNumber"]))
         if self.browse is not None:
             self.browse.update_selected()
 

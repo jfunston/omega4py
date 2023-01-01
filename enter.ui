@@ -365,7 +365,7 @@
       </font>
      </property>
     </widget>
-    <widget class="QLineEdit" name="IngoOValue">
+    <widget class="QLineEdit" name="IngOValue">
      <property name="geometry">
       <rect>
        <x>90</x>

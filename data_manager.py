@@ -115,6 +115,7 @@ class DataManager():
         cur = self.db.cursor()
         update = "UPDATE books SET LstSaleDate = ?, SalesHist = ?, NumberSold = ?, OrderActiv = ? WHERE RecordID = ?"
         hist = ""
+        # TODO error handling and fallback
         if self.get_current_record()["SalesHist"].find(today) == -1:
             hist = today +", " + self.get_current_record()["SalesHist"]
         elif self.get_current_record()["SalesHist"].find(today + " (") == -1:
@@ -180,7 +181,6 @@ class DataManager():
             self.currentID = len(self.records) - 1
         self.totalRecords -= 1
 
-
     def substring_search(self, searchKey):
         like = "%" + searchKey + "%"
         self.currentID = 0
@@ -234,13 +234,13 @@ class DataManager():
         float_fields = ["Price", "OurPrice", "Discount"]
         for text_field in text_fields:
             if text_field not in record.keys():
-                record[text_field] = ""
+                record[text_field] = None
         for int_field in int_fields:
             if int_field not in record.keys():
-                record[int_field] = 0
+                record[int_field] = None
         for float_field in float_fields:
             if float_field not in record.keys():
-                record[float_field] = 0.0
+                record[float_field] = None
 
         cur = self.db.cursor()
         cur.execute("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
