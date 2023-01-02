@@ -1,6 +1,8 @@
 from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
 from util import ui_methods, pretty_int, pretty_bool
+from datetime import date
+import urllib.request, json
 
 @ui_methods
 class EnterWindow(QtWidgets.QMainWindow):
@@ -12,6 +14,7 @@ class EnterWindow(QtWidgets.QMainWindow):
         uic.loadUi("enter.ui", self)
 
         self.add_qt_action("Save", self.save_record, 'f10', self.SaveButton)
+        self.ISBNValue.textChanged.connect(self.handle_isbn_change)
 
         self.allLabels = []
         self.allLabels.append(self.titleValue)
@@ -110,6 +113,42 @@ class EnterWindow(QtWidgets.QMainWindow):
         except ValueError:
             raise ValueError(f"Record not saved, {value_name} must be a number or empty")
         return converted
+
+    def handle_isbn_change(self, new_text):
+        if self.edit_mode or len(new_text) != 13:
+            return
+        try:
+            conv_text = int(new_text)
+        except ValueError:
+            return
+
+        base_api_link = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
+        try:
+            with urllib.request.urlopen(base_api_link + new_text, timeout=2) as f:
+                text = f.read()
+
+            decoded_text = text.decode("utf-8")
+            obj = json.loads(decoded_text) # deserializes decoded_text to a Python object
+            volume_info = obj["items"][0]["volumeInfo"]
+            author = volume_info["authors"][0]
+            title = volume_info["title"]
+            publisher = volume_info["publisher"]
+        except:
+            return
+
+        if self.authorValue.text() == "":
+            split = author.split()
+            if len(split) > 0:
+                self.authorValue.setText(split[len(split)-1])
+        if self.titleValue.text() == "":
+            self.titleValue.setText(title)
+        if self.PublisherValue.text() == "":
+            self.PublisherValue.setText(publisher)
+        if self.AcqDateValue.text() == "":
+            today = date.today().strftime("%m/%d/%Y")
+            self.AcqDateValue.setText(today)
+        if self.maxDesiredValue.text() == "":
+            self.maxDesiredValue.setText("1")
 
     def save_record(self):
         record = {}

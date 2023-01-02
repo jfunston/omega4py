@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
 from util import ui_methods, pretty_int, pretty_bool
 from enter import EnterWindow
+import os
 
 
 @ui_methods
@@ -85,6 +86,7 @@ class BrowseWindow(QtWidgets.QMainWindow):
 
         self.add_qt_action("Close", self.close, 'escape')
         self.add_qt_action("Select", self.user_select, 'return')
+        self.add_qt_action("Print", self.send_to_printer, 'p')
 
     def update_selected(self):
         self.browseTable.setFocus()
@@ -95,6 +97,12 @@ class BrowseWindow(QtWidgets.QMainWindow):
         self.view.update_view()
         self.close()
 
+    def send_to_printer(self):
+        filename = "omega_print_tmp_file.txt"
+        with open(filename, 'w') as f:
+            for record in self.db.records:
+                f.write(f"{record['Title']}, {record['AuthorLast']}, {record['Subj']}, {record['Price']}\n")
+        os.startfile(filename, "print")
 
 @ui_methods
 class ViewWindow(QtWidgets.QMainWindow):

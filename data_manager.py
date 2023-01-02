@@ -133,7 +133,7 @@ class DataManager():
         self.records[self.currentID] = Record(data)
 
     def make_sale(self):
-        today = date.today().strftime("%d/%m/%Y")
+        today = date.today().strftime("%m/%d/%Y")
         cur = self.db.cursor()
         update = "UPDATE books SET LstSaleDate = ?, SalesHist = ?, NumberSold = ?, OrderActiv = ? WHERE RecordID = ?"
         hist = ""
