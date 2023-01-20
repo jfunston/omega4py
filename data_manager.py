@@ -188,7 +188,15 @@ class DataManager():
             self.currentID += 1
 
     def search(self, searchKey):
-        self.currentID = bisect_left(self.records, searchKey.lower(), key= lambda x: x["Title"].lower())
+        searchIndex = self.currentIndex
+        if "+" in self.currentIndex:
+            searchIndex = self.currentIndex.split('+')[0]
+
+        if self.currentIndex != "RecordID":
+            searchKey = searchKey.lower()
+            self.currentID = bisect_left(self.records, searchKey, key= lambda x: x[searchIndex].lower())
+        else:
+            self.currentID = bisect_left(self.records, int(searchKey), key= lambda x: x[searchIndex])
 
     def delete_current_record(self):
         # TODO snapshot

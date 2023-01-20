@@ -13,7 +13,9 @@ class EnterWindow(QtWidgets.QMainWindow):
         super(EnterWindow, self).__init__()
         uic.loadUi("enter.ui", self)
 
-        self.add_qt_action("Save", self.save_record, 'f10', self.SaveButton)
+        self.add_qt_action("Save", lambda _ : self.save_record(False), 'f10', self.SaveButton)
+        self.add_qt_action("Next Record", lambda _ : self.save_record(True), 'Ctrl+return', self.NextRecordButton)
+        self.add_qt_action("Close", self.close_action, 'escape', self.ForgetButton)
         self.ISBNValue.textChanged.connect(self.handle_isbn_change)
 
         self.allLabels = []
@@ -54,8 +56,16 @@ class EnterWindow(QtWidgets.QMainWindow):
             self.recordID = in_record["RecordID"]
             self.edit_mode = True
             self.update_fields(in_record)
+        if self.edit_mode:
+            self.NextRecordButton.setEnabled(False)
+            self.NextRecordButton.setVisible(False)
         self.recordIDValue.setText(str(self.recordID))
         self.show()
+
+    def close_action(self):
+        self.view_window.show()
+        self.view_window.enter_window = None
+        self.close()
 
     def update_fields(self, record):
         self.titleValue.setText(record["Title"])
@@ -150,7 +160,7 @@ class EnterWindow(QtWidgets.QMainWindow):
         if self.maxDesiredValue.text() == "":
             self.maxDesiredValue.setText("1")
 
-    def save_record(self):
+    def save_record(self, next_record):
         record = {}
         record["RecordID"] = self.recordID
         record["Title"] = self.titleValue.text()
@@ -188,9 +198,19 @@ class EnterWindow(QtWidgets.QMainWindow):
             self.db.insert_record(record)
             self.view_window.set_index("RecordID")
             self.db.set_current_id(len(self.db.records)-1)
-        self.view_window.update_view()
-        self.view_window.show()
-        self.close()
+        if not next_record:
+            self.view_window.update_view()
+            self.close_action()
+            return
+
+        self.recordID = self.db.get_max_record_id() + 1
+        for label in self.allLabels:
+            try:
+                label.setText("")
+            except:
+                label.setPlainText("")
+        self.recordIDValue.setText(str(self.recordID))
+
 
     def showEvent(self, a0: QtGui.QShowEvent) -> None:
         geo = self.geometry()

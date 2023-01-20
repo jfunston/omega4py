@@ -7,10 +7,14 @@ import os
 
 @ui_methods
 class FindDialog(QtWidgets.QDialog):
-    def __init__(self, findCallback, parent=None):
+    def __init__(self, findCallback, findIndex, parent=None):
         super(FindDialog, self).__init__(parent)
         uic.loadUi('find.ui', self)
 
+        title = findIndex
+        if "+" in findIndex:
+            title = findIndex.split("+")[0]
+        self.setWindowTitle(f"Find in {title}")
         self.resultCallback = findCallback
         self.add_qt_action("Find Record", self.set_search_key, 'return')
         self.show()
@@ -98,6 +102,10 @@ class BrowseWindow(QtWidgets.QMainWindow):
         self.close()
 
     def send_to_printer(self):
+        confirm = QtWidgets.QMessageBox
+        ret = confirm.question(self, 'Print Confirmation', f"Are you sure? This print {len(self.db.records)} record(s).", confirm.Yes | confirm.No)
+        if ret == confirm.No:
+            return
         filename = "omega_print_tmp_file.txt"
         with open(filename, 'w') as f:
             for record in self.db.records:
@@ -122,6 +130,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
         self.add_qt_action("Delete", self.delete_record, '', self.DeleteButton)
         self.add_qt_action("Make Sale", self.make_sale, 's')
+        self.add_qt_action("Close", self.close, 'escape')
 
         self.browse = None
         self.enter_window = None
@@ -185,7 +194,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         dlg.show()
 
     def find_record(self, search):
-        self.set_index("Title")
+        #self.set_index("Title")
         self.db.search(search)
         self.update_view()
 
@@ -197,7 +206,7 @@ class ViewWindow(QtWidgets.QMainWindow):
             self.update_view()
 
     def open_find_dialog(self):
-        dlg = FindDialog(self.find_record, self)
+        dlg = FindDialog(self.find_record, self.db.currentIndex, self)
         dlg.show()
 
     def open_browse_window(self):
