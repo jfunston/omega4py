@@ -1,3 +1,6 @@
+import json
+import urllib
+
 from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
 from util import ui_methods, pretty_int, pretty_bool
@@ -141,6 +144,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
         self.add_qt_action("Delete", self.delete_record, '', self.DeleteButton)
         self.add_qt_action("Make Sale", self.make_sale, 's', self.MarkSaleButton)
+        self.add_qt_action("Get Info", self.get_info, 'ctrl+i')
         self.add_qt_action("Close", self.close, 'escape')
 
         self.browse = None
@@ -206,7 +210,6 @@ class ViewWindow(QtWidgets.QMainWindow):
         dlg.show()
 
     def find_record(self, search):
-        #self.set_index("Title")
         self.db.search(search)
         self.update_view()
 
@@ -216,6 +219,24 @@ class ViewWindow(QtWidgets.QMainWindow):
         if ret == confirm.Yes:
             self.db.delete_current_record()
             self.update_view()
+
+    def get_info(self):
+        infobox = QtWidgets.QMessageBox
+        info = ""
+        base_api_link = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
+        try:
+            with urllib.request.urlopen(base_api_link + self.ISBNValue.text(), timeout=2) as f:
+                text = f.read()
+
+            decoded_text = text.decode("utf-8")
+            obj = json.loads(decoded_text) # deserializes decoded_text to a Python object
+            volume_info = obj["items"][0]["volumeInfo"]
+            info += volume_info["title"] + '\n'
+            info += volume_info["authors"][0] + '\n'
+            info += volume_info["description"]
+        except:
+            return
+        infobox.question(self, 'Book Information', info, infobox.Ok)
 
     def open_find_dialog(self):
         dlg = FindDialog(self.find_record, self.db.currentIndex, self)
