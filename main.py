@@ -14,17 +14,21 @@ db = None
 
 
 @ui_methods
-class FindDialog(QtWidgets.QDialog):
-    def __init__(self, findCallback, parent=None):
-        super(FindDialog, self).__init__(parent)
-        uic.loadUi('find.ui', self)
+class SearchListDialog(QtWidgets.QDialog):
+    def __init__(self, findCallback, db, parent=None):
+        super(SearchListDialog, self).__init__(parent)
+        uic.loadUi('search.ui', self)
+        self.db = db
 
+        self.setWindowTitle("Search/List")
         self.resultCallback = findCallback
         self.add_qt_action("Find Record", self.set_search_key, 'return')
+        self.findBox.setFocus()
         self.show()
 
     def set_search_key(self):
-        self.resultCallback(self.SearchBox.text())
+        self.db.substring_search(self.fieldComboBox.currentText(), self.findBox.text(), self.orderComboBox.currentText())
+        self.resultCallback()
         self.accept()
 
 @ui_methods
@@ -32,9 +36,11 @@ class FindReplaceDialog(QtWidgets.QDialog):
     def __init__(self, db, parent=None):
         super(FindReplaceDialog, self).__init__(parent)
         uic.loadUi('replace.ui', self)
+        self.setWindowTitle("Find -> Replace")
         self.db = db
 
         self.add_qt_action("Find Replace", self.find_replace, 'return')
+        self.findBox.setFocus()
         self.show()
 
     def find_replace(self):
@@ -54,10 +60,10 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         uic.loadUi('main.ui', self)
 
+        self.setWindowTitle("Omega4")
         self.currentIndex = "RecordID"
         self.add_qt_action("View Records", self.view_records, 'v', self.ViewButton)
         self.add_qt_action("Search Records", self.search_records, 's', self.SearchButton)
-        self.add_qt_action("List 200 Order Code", self.ordercode_200, '', self.List200Button)
         self.add_qt_action("List Non-Empty Order Code", self.ordercode_nonempty, '', self.ListNonEmptyOrderButton)
         self.add_qt_action("Find Replace", self.find_replace, '', self.FindReplaceButton)
         self.add_qt_action("Load A4 DB", self.load_a4_db, 'l', self.LoadA4Button)
@@ -80,6 +86,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.db = DataManager(r"bookinv.db")
 
     def view_records(self):
+        if len(self.db.records) == 0:
+            confirm = QtWidgets.QMessageBox
+            ret = confirm.question(self, 'Reset Search', "There are no records to view. Do you want to reset the search/list?", confirm.Yes | confirm.No)
+            if ret == confirm.Yes:
+                self.db.substring_search("Title", "", "Title")
+                self.update_view()
+            else:
+                return
+
         self.view = ViewWindow(self.db, self)
         self.view.show()
         self.close()
@@ -88,16 +103,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.db.substring_search(searchKey)
         self.update_view()
 
-    def ordercode_200(self):
-        self.db.ordercode_search("200")
-        self.update_view()
-
     def ordercode_nonempty(self):
-        self.db.ordercode_search("")
+        self.db.ordercode_search()
         self.update_view()
 
     def search_records(self):
-        find = FindDialog(self.search_callback, self)
+        find = SearchListDialog(lambda : self.update_view(), self.db, self)
         find.show()
 
     def find_replace(self):

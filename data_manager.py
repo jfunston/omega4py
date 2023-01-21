@@ -94,6 +94,8 @@ class DataManager():
             self.validIndexes = ["RecordID", "Title", "AuthorLast", "Subj+Title", "Pub+Title", "OrderActiv", "ISBN"]
             self.currentIndex = "RecordID"
             self.totalRecords = len(self.records)
+            self.search_string = ""
+            self.search_binding = None
         except:
             self.totalRecords = 0
             self.record = []
@@ -164,8 +166,11 @@ class DataManager():
         if index not in self.validIndexes:
             return
         self.currentIndex = index
-        lookupValue = self.get_current_record()[index.split('+')[0]]
-        recordID = self.get_current_record()["RecordID"]
+        lookupValue = None
+        recordID = None
+        if len(self.records) > 0:
+            lookupValue = self.get_current_record()[index.split('+')[0]]
+            recordID = self.get_current_record()["RecordID"]
 
         cur = self.db.cursor()
         self.records = []
@@ -176,9 +181,21 @@ class DataManager():
             for index_part in index_parts:
                 order_by += index_part + " COLLATE NOCASE, "
             order_by = order_by[:-2]
-        for record in cur.execute("SELECT * FROM books" + order_by).fetchall():
-            self.records.append(Record(record))
+        select = "SELECT * FROM books"
+        if self.search_string != "":
+            select = self.search_string
+            binding = self.search_binding
+            for record in cur.execute(select + order_by, binding).fetchall():
+                self.records.append(Record(record))
+        else:
+            for record in cur.execute(select + order_by).fetchall():
+                self.records.append(Record(record))
+
         cur.close()
+
+        if lookupValue is None:
+            self.currentID = 0
+            return
 
         if index == "RecordID":
             self.currentID = bisect_left(self.records, lookupValue, key= lambda x: x[index.split('+')[0]])
@@ -209,15 +226,21 @@ class DataManager():
             self.currentID = len(self.records) - 1
         self.totalRecords -= 1
 
-    def substring_search(self, searchKey):
-        like = "%" + searchKey + "%"
+    def substring_search(self, search_field, search_key, order_by):
+        if search_key is None or search_key == "":
+            self.search_string = ""
+            self.search_binding = None
+            self.change_index(order_by)
+        like = "%" + search_key + "%"
         self.currentID = 0
-        self.currentIndex = "Search"
+        self.currentIndex = order_by
 
         cur = self.db.cursor()
         self.records = []
-        order_by = " ORDER BY Title COLLATE NOCASE"
-        for record in cur.execute("SELECT * FROM books WHERE Title LIKE ?" + order_by, (like,)).fetchall():
+        order_by = " ORDER BY " + order_by + " COLLATE NOCASE"
+        self.search_string = "SELECT * FROM books WHERE " + search_field + " LIKE ?"
+        self.search_binding = (like,)
+        for record in cur.execute(self.search_string + order_by, self.search_binding).fetchall():
             self.records.append(Record(record))
         cur.close()
 
@@ -238,19 +261,16 @@ class DataManager():
         self.currentIndex = "tmp"
         self.change_index(prvIndex)
 
-    def ordercode_search(self, search):
-        where = ""
-        if search == "200":
-            where = "OrderActiv = 200"
-        elif search == "":
-            where = 'OrderActiv != ""'
+    def ordercode_search(self):
+        where = 'OrderActiv != ""'
+        self.change_index("Title")
         self.currentID = 0
-        self.currentIndex = "Search"
 
         cur = self.db.cursor()
         self.records = []
         order_by = " ORDER BY Title COLLATE NOCASE"
-        for record in cur.execute("SELECT * FROM books WHERE " + where + order_by).fetchall():
+        self.search_string = "SELECT * FROM books WHERE " + where
+        for record in cur.execute(self.search_string + order_by).fetchall():
             self.records.append(Record(record))
         cur.close()
 

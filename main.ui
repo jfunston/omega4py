@@ -51,7 +51,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Search Title</string>
+     <string>Search/List</string>
     </property>
    </widget>
    <widget class="QLabel" name="RecordsInDBLabel">
@@ -146,31 +146,11 @@
      <string>Load A4 DB</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="List200Button">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>350</y>
-      <width>321</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>22</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>List 200 Order Code</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="ListNonEmptyOrderButton">
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>410</y>
+      <y>350</y>
       <width>321</width>
       <height>41</height>
      </rect>
@@ -190,7 +170,7 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>470</y>
+      <y>410</y>
       <width>321</width>
       <height>41</height>
      </rect>
@@ -213,7 +193,7 @@
      <x>0</x>
      <y>0</y>
      <width>1199</width>
-     <height>21</height>
+     <height>29</height>
     </rect>
    </property>
   </widget>

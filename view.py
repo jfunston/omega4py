@@ -76,6 +76,7 @@ class BrowseWindow(QtWidgets.QMainWindow):
 
         super(BrowseWindow, self).__init__() # Call the inherited classes __init__ method
         uic.loadUi('browse.ui', self) # Load the .ui file
+        self.setWindowTitle("Browse Records")
         self.browseTable.setRowCount(len(db.records))
         i = 0
         for record in db.records:
@@ -120,6 +121,7 @@ class ViewWindow(QtWidgets.QMainWindow):
 
         super(ViewWindow, self).__init__()
         uic.loadUi('view.ui', self)
+        self.setWindowTitle("View Record")
 
         self.add_qt_action("Next Record", self.next_record, 'down', self.NextButton)
         self.add_qt_action("Previous Record", self.previous_record, 'up', self.PreviousButton)

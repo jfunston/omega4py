@@ -211,7 +211,6 @@ class EnterWindow(QtWidgets.QMainWindow):
                 label.setPlainText("")
         self.recordIDValue.setText(str(self.recordID))
 
-
     def showEvent(self, a0: QtGui.QShowEvent) -> None:
         geo = self.geometry()
         geo.moveCenter(self.view_window.geometry().center())
