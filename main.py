@@ -1,4 +1,6 @@
-from PyQt5 import QtWidgets, uic, QtGui
+import os
+
+from PyQt5 import QtWidgets, uic, QtGui, QtCore
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView, QFileDialog
 from data_manager import DataManager
 from dbfread import DBF
@@ -105,6 +107,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     db = DataManager(r"bookinv.db")
+    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     app = QtWidgets.QApplication(sys.argv)
+    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
     main_win = MainWindow(db)
     app.exec_()

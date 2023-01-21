@@ -302,23 +302,33 @@ class DataManager():
         cur.execute("CREATE INDEX idx_orderactiv ON books(OrderActiv COLLATE NOCASE)")
         idx = 1
         for record in self.table.records:
+            acqdate = None
+            if record["ACQUISDATE"] is not None:
+                acqdate = record["ACQUISDATE"].strftime("%m/%d/%Y")
+            lstsale = None
+            if record["LSTSALEDAT"] is not None:
+                lstsale = record["LSTSALEDAT"].strftime("%m/%d/%Y")
+            if record["TITLE"] is None or record["TITLE"] == "":
+                continue
             insertSQL = "INSERT INTO books VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % \
-                        (idx, record["TITLE"], record["AUTHORLAST"], record["PUB"], record["ACQUISDATE"], record["ISBN"], record["SUBJ"], \
-                         record["PRICE"], record["LSTSALEDAT"], record["MXNUMBER"], record["NUMBERSOLD"], record["NUMONORDER"], record["BONUMBER"], \
+                        (idx, record["TITLE"], record["AUTHORLAST"], record["PUB"], acqdate, record["ISBN"], record["SUBJ"], \
+                         record["PRICE"], lstsale, record["MXNUMBER"], record["NUMBERSOLD"], record["NUMONORDER"], record["BONUMBER"], \
                          record["BACKORDER"], record["PONUM"], record["SALES_HIST"], record["ORDERACTIV"], record["PREVPONUM"], record["OURPRICE"], \
                          record["ORDERINFO"], record["DISCOUNT"], record["ISBN13"], record["PW"], record["IPS"], record["INGO"], \
                          record["INGT"], record["DELETE"])
             print(insertSQL)
-            cur.execute("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        (idx, record["TITLE"], record["AUTHORLAST"], record["PUB"], record["ACQUISDATE"], record["ISBN"],
+            res = cur.execute("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        (idx, record["TITLE"], record["AUTHORLAST"], record["PUB"], acqdate, record["ISBN"],
                         record["SUBJ"], \
-                        record["PRICE"], record["LSTSALEDAT"], record["MXNUMBER"], record["NUMBERSOLD"],
+                        record["PRICE"], lstsale, record["MXNUMBER"], record["NUMBERSOLD"],
                         record["NUMONORDER"], record["BONUMBER"], \
                         record["BACKORDER"], record["PONUM"], record["SALES_HIST"], record["ORDERACTIV"],
                         record["PREVPONUM"], record["OURPRICE"], \
                         record["ORDERINFO"], record["DISCOUNT"], record["ISBN13"], record["PW"], record["IPS"],
                         record["INGO"], \
                         record["INGT"], record["DELETE"]))
+            if res.lastrowid != idx:
+                raise ValueError("Lost insert")
             idx += 1
         con.commit()
         con.close()
