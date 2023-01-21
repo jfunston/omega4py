@@ -92,6 +92,8 @@ class BrowseWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Close", self.close, 'escape')
         self.add_qt_action("Select", self.user_select, 'return')
         self.add_qt_action("Print", self.send_to_printer, 'p')
+        self.actionPrint.triggered.connect(self.send_to_printer)
+        self.actionOpen_Excel.triggered.connect(self.send_to_excel)
 
     def update_selected(self):
         self.browseTable.setFocus()
@@ -113,6 +115,14 @@ class BrowseWindow(QtWidgets.QMainWindow):
                 f.write(f"{record['Title']}, {record['AuthorLast']}, {record['Subj']}, {record['Price']}\n")
         os.startfile(filename, "print")
 
+    def send_to_excel(self):
+        filename = "omega_print_tmp_file.csv"
+        with open(filename, 'w') as f:
+            f.write("Title, AuthorLast, Subj, Price\n")
+            for record in self.db.records:
+                f.write(f"{record['Title']}, {record['AuthorLast']}, {record['Subj']}, {record['Price']}\n")
+        os.startfile(filename)
+
 @ui_methods
 class ViewWindow(QtWidgets.QMainWindow):
     def __init__(self, db, main_win):
@@ -121,7 +131,6 @@ class ViewWindow(QtWidgets.QMainWindow):
 
         super(ViewWindow, self).__init__()
         uic.loadUi('view.ui', self)
-        self.setWindowTitle("View Record")
 
         self.add_qt_action("Next Record", self.next_record, 'down', self.NextButton)
         self.add_qt_action("Previous Record", self.previous_record, 'up', self.PreviousButton)
@@ -131,7 +140,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Change", self.open_change_window, 'c', self.ChangeButton)
         self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
         self.add_qt_action("Delete", self.delete_record, '', self.DeleteButton)
-        self.add_qt_action("Make Sale", self.make_sale, 's')
+        self.add_qt_action("Make Sale", self.make_sale, 's', self.MarkSaleButton)
         self.add_qt_action("Close", self.close, 'escape')
 
         self.browse = None
@@ -145,6 +154,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         event.accept()
 
     def update_view(self):
+        self.setWindowTitle("View Record - " + self.db.currentIndex)
         record = self.db.get_current_record()
         self.titleValue.setText(record["Title"])
         self.authorValue.setText(record["AuthorLast"])

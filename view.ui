@@ -146,7 +146,7 @@
    <widget class="QPushButton" name="IndexButton">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>640</x>
       <y>720</y>
       <width>111</width>
       <height>41</height>
@@ -160,7 +160,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Index</string>
+     <string>(I)ndex</string>
     </property>
    </widget>
    <widget class="QLabel" name="recordIDValue">
@@ -205,7 +205,7 @@
    <widget class="QPushButton" name="FindButton">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>530</x>
       <y>720</y>
       <width>101</width>
       <height>41</height>
@@ -219,7 +219,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Find</string>
+     <string>(F)ind</string>
     </property>
    </widget>
    <widget class="QLabel" name="historyLabel">
@@ -417,9 +417,9 @@
    <widget class="QPushButton" name="BrowseButton">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>390</x>
       <y>720</y>
-      <width>121</width>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
@@ -431,7 +431,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Browse</string>
+     <string>(B)rowse</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ChangeButton">
@@ -439,7 +439,7 @@
      <rect>
       <x>120</x>
       <y>720</y>
-      <width>121</width>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
@@ -451,13 +451,13 @@
      </font>
     </property>
     <property name="text">
-     <string>Change</string>
+     <string>(C)hange</string>
     </property>
    </widget>
    <widget class="QPushButton" name="EnterButton">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>260</x>
       <y>720</y>
       <width>121</width>
       <height>41</height>
@@ -471,7 +471,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Enter</string>
+     <string>(E)nter</string>
     </property>
    </widget>
    <widget class="QFrame" name="CenterFrame">
@@ -1050,6 +1050,26 @@
      <string>Delete</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="MarkSaleButton">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>720</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>22</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Mark (S)ale</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1057,7 +1077,7 @@
      <x>0</x>
      <y>0</y>
      <width>1100</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

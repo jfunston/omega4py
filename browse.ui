@@ -57,11 +57,29 @@
      <x>0</x>
      <y>0</y>
      <width>1203</width>
-     <height>21</height>
+     <height>29</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File...</string>
+    </property>
+    <addaction name="actionPrint"/>
+    <addaction name="actionOpen_Excel"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionPrint">
+   <property name="text">
+    <string>Print</string>
+   </property>
+  </action>
+  <action name="actionOpen_Excel">
+   <property name="text">
+    <string>Open Excel</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

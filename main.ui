@@ -126,26 +126,6 @@
      <string>Records In List:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="LoadA4Button">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>700</y>
-      <width>191</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>22</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Load A4 DB</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="ListNonEmptyOrderButton">
     <property name="geometry">
      <rect>
@@ -196,8 +176,37 @@
      <height>29</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File...</string>
+    </property>
+    <addaction name="actionSave_Backup"/>
+    <addaction name="actionLoad_Backup"/>
+    <addaction name="actionLoad_A4_DB_2"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLoad_A4_DB">
+   <property name="text">
+    <string>Load A4 DB</string>
+   </property>
+  </action>
+  <action name="actionSave_Backup">
+   <property name="text">
+    <string>Save Backup</string>
+   </property>
+  </action>
+  <action name="actionLoad_Backup">
+   <property name="text">
+    <string>Load Backup</string>
+   </property>
+  </action>
+  <action name="actionLoad_A4_DB_2">
+   <property name="text">
+    <string>Load A4 DB</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

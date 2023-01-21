@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from PyQt5 import QtWidgets, uic, QtGui, QtCore
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView, QFileDialog
@@ -66,7 +67,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Search Records", self.search_records, 's', self.SearchButton)
         self.add_qt_action("List Non-Empty Order Code", self.ordercode_nonempty, '', self.ListNonEmptyOrderButton)
         self.add_qt_action("Find Replace", self.find_replace, '', self.FindReplaceButton)
-        self.add_qt_action("Load A4 DB", self.load_a4_db, 'l', self.LoadA4Button)
+        self.actionLoad_A4_DB.triggered.connect(self.load_a4_db)
+        self.actionSave_Backup.triggered.connect(self.save_backup)
+        self.actionLoad_Backup.triggered.connect(self.load_backup)
 
         self.update_view()
         self.show()
@@ -81,9 +84,28 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def load_a4_db(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Select A4 DBF file", "", "DBF Files (*.DBF)")
+        if file_name is None or file_name == "":
+            return
         self.db.table = DBF(file_name, load=True)
         self.db.convert_db()
         self.db = DataManager(r"bookinv.db")
+        self.update_view()
+
+    def save_backup(self):
+        file_name, _ = QFileDialog.getSaveFileName(self, "Select DB backup file name", "", "SQLite DB Files (*.db)")
+        if file_name is None or file_name == "" or file_name.find("bookinv.db") != -1:
+            return
+        if len(file_name.split('.')) == 1 or file_name.split('.')[1] != "db":
+            file_name += ".db"
+        shutil.copyfile("bookinv.db", file_name)
+
+    def load_backup(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Select DB file name", "", "SQLite DB Files (*.db)")
+        if file_name is None or file_name == "" or file_name.find("bookinv.db") != -1:
+            return
+        shutil.copyfile(file_name, "bookinv.db")
+        self.db = DataManager(r"bookinv.db")
+        self.update_view()
 
     def view_records(self):
         if len(self.db.records) == 0:
@@ -112,6 +134,7 @@ class MainWindow(QtWidgets.QMainWindow):
         find.show()
 
     def find_replace(self):
+        shutil.copyfile("bookinv.db", "find_replace_backup.db")
         replace = FindReplaceDialog(self.db, self)
         replace.show()
 
