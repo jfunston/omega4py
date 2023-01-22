@@ -33,6 +33,9 @@
     <property name="text">
      <string>View/enter Records</string>
     </property>
+    <property name="autoDefault">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="SearchButton">
     <property name="geometry">
@@ -52,6 +55,9 @@
     </property>
     <property name="text">
      <string>Search/List</string>
+    </property>
+    <property name="autoDefault">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="RecordsInDBLabel">
@@ -145,6 +151,9 @@
     <property name="text">
      <string>List Non-Empty Order Code</string>
     </property>
+    <property name="autoDefault">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="FindReplaceButton">
     <property name="geometry">
@@ -164,6 +173,9 @@
     </property>
     <property name="text">
      <string>Find -&gt; Replace</string>
+    </property>
+    <property name="autoDefault">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

@@ -1,3 +1,4 @@
+import copy
 import json
 import urllib
 
@@ -143,7 +144,8 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Change", self.open_change_window, 'c', self.ChangeButton)
         self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
         self.add_qt_action("Delete", self.delete_record, '', self.DeleteButton)
-        self.add_qt_action("Make Sale", self.make_sale, 's', self.MarkSaleButton)
+        self.add_qt_action("Make Sale", self.make_sale, 'alt+d', self.MarkSaleButton)
+        self.add_qt_action("Make Sale", self.undo_sale, 'alt+u')
         self.add_qt_action("Get Info", self.get_info, 'ctrl+i')
         self.add_qt_action("Close", self.close, 'escape')
 
@@ -189,7 +191,17 @@ class ViewWindow(QtWidgets.QMainWindow):
             self.browse.update_selected()
 
     def make_sale(self):
+        self.undo_state = copy.deepcopy(self.db.get_current_record())
         self.db.make_sale()
+        self.update_view()
+
+    def undo_sale(self):
+        if self.undo_state is None:
+            return
+        if self.undo_state["RecordID"] != self.db.get_current_record()["RecordID"]:
+            return
+        self.db.update_record(self.undo_state, True)
+        self.undo_state = None
         self.update_view()
 
     def next_record(self):

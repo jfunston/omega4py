@@ -132,6 +132,10 @@ class EnterWindow(QtWidgets.QMainWindow):
         except ValueError:
             return
 
+        if self.db.check_isbn(new_text):
+            infobox = QtWidgets.QMessageBox
+            infobox.question(self, 'Warning', "ISBN already exists in database", infobox.Ok)
+
         base_api_link = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
         try:
             with urllib.request.urlopen(base_api_link + new_text, timeout=2) as f:

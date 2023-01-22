@@ -216,7 +216,6 @@ class DataManager():
             self.currentID = bisect_left(self.records, int(searchKey), key= lambda x: x[searchIndex])
 
     def delete_current_record(self):
-        # TODO snapshot
         cur = self.db.cursor()
         cur.execute("DELETE FROM books WHERE RecordID = " + str(self.get_current_record()["RecordID"]))
         self.db.commit()
@@ -274,6 +273,13 @@ class DataManager():
             self.records.append(Record(record))
         cur.close()
 
+    def check_isbn(self, isbn):
+        cur = self.db.cursor()
+        res = cur.execute("SELECT * FROM books WHERE ISBN = ?", (isbn,)).fetchall()
+        if len(res) > 0:
+            return True
+        return False
+
     def insert_record(self, record):
         record["RecordID"] = self.get_max_record_id() + 1
         record = regularize_user_record(record)
@@ -292,8 +298,9 @@ class DataManager():
         self.db.commit()
         cur.close()
 
-    def update_record(self, record):
-        record = regularize_user_record(record)
+    def update_record(self, record, skip_regularize=False):
+        if not skip_regularize:
+            record = regularize_user_record(record)
 
         cur = self.db.cursor()
         cur.execute("UPDATE books SET Title = ?, AuthorLast = ?, Pub = ?, AcquisDate = ?, ISBN = ?, Subj = ?, Price = ?, LstSaleDate = ?, MxNumber = ?, NumberSold = ?, NumOnOrder = ?, BoNumber = ?, BackOrder = ?, PoNum = ?, SalesHist = ?, OrderActiv = ?, PrevPoNum = ?, OurPrice = ?, OrderInfo = ?, Discount = ?, ISBN13 = ?, PW = ?, IPS = ?, IngO = ?, IngT = ?, DoDelete = ? WHERE RecordID = ?",
