@@ -95,7 +95,7 @@ class BrowseWindow(QtWidgets.QMainWindow):
 
         self.add_qt_action("Close", self.close, 'escape')
         self.add_qt_action("Select", self.user_select, 'return')
-        self.add_qt_action("Print", self.send_to_printer, 'p')
+        self.add_qt_action("SelectV", self.user_select, 'v')
         self.actionPrint.triggered.connect(self.send_to_printer)
         self.actionOpen_Excel.triggered.connect(self.send_to_excel)
 
@@ -145,7 +145,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
         self.add_qt_action("Delete", self.delete_record, '', self.DeleteButton)
         self.add_qt_action("Make Sale", self.make_sale, 'alt+d', self.MarkSaleButton)
-        self.add_qt_action("Make Sale", self.undo_sale, 'alt+u')
+        self.add_qt_action("Undo Make Sale", self.undo_sale, 'alt+u')
         self.add_qt_action("Get Info", self.get_info, 'ctrl+i')
         self.add_qt_action("Close", self.close, 'escape')
 
@@ -153,6 +153,12 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.enter_window = None
         self.update_view()
         self.show()
+
+    def wheelEvent(self, event: QtGui.QWheelEvent) -> None:
+        if event.angleDelta().y() > 0:
+            self.previous_record()
+        else:
+            self.next_record()
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         if self.enter_window is None:

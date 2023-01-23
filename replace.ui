@@ -52,6 +52,16 @@
      <string>Subj</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>PoNum</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>PrevPoNum</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="fieldLabel">
    <property name="geometry">

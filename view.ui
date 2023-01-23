@@ -80,7 +80,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Title:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Title:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="titleValue">
@@ -119,7 +119,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Author:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Author:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="authorValue">
@@ -146,9 +146,9 @@
    <widget class="QPushButton" name="IndexButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>650</x>
       <y>720</y>
-      <width>111</width>
+      <width>121</width>
       <height>41</height>
      </rect>
     </property>
@@ -167,8 +167,8 @@
     <property name="geometry">
      <rect>
       <x>460</x>
-      <y>660</y>
-      <width>451</width>
+      <y>670</y>
+      <width>281</width>
       <height>41</height>
      </rect>
     </property>
@@ -188,7 +188,7 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>660</y>
+      <y>670</y>
       <width>81</width>
       <height>41</height>
      </rect>
@@ -199,13 +199,13 @@
      </font>
     </property>
     <property name="text">
-     <string>Record:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Record:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="FindButton">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>540</x>
       <y>720</y>
       <width>101</width>
       <height>41</height>
@@ -237,7 +237,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Sales History:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Sales History:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="historyValue">
@@ -282,7 +282,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Last Sale Date:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Last Sale Date:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="lastSaleValue">
@@ -321,7 +321,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Max # Desired:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Max # Desired:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="numberSoldLabel">
@@ -339,7 +339,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Number Sold/</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Number Sold/&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="toOrderLable">
@@ -357,7 +357,7 @@
      </font>
     </property>
     <property name="text">
-     <string>To Order:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;To Order:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="maxDesiredValue">
@@ -419,7 +419,7 @@
      <rect>
       <x>390</x>
       <y>720</y>
-      <width>131</width>
+      <width>141</width>
       <height>41</height>
      </rect>
     </property>
@@ -437,9 +437,9 @@
    <widget class="QPushButton" name="ChangeButton">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>110</x>
       <y>720</y>
-      <width>131</width>
+      <width>141</width>
       <height>41</height>
      </rect>
     </property>
@@ -528,16 +528,16 @@
       </font>
      </property>
      <property name="text">
-      <string>ISBN:</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;ISBN:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLabel" name="VendorLabel">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>20</y>
+       <y>10</y>
        <width>151</width>
-       <height>21</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -546,7 +546,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Vendors:</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Vendors:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLabel" name="PublisherLabel">
@@ -564,7 +564,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Publisher:</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Publisher:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLabel" name="ORLabel">
@@ -582,7 +582,7 @@
       </font>
      </property>
      <property name="text">
-      <string>IngOR:</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;IngOR:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLabel" name="TNLabel">
@@ -600,7 +600,7 @@
       </font>
      </property>
      <property name="text">
-      <string>IngTN:</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;IngTN:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLabel" name="IPSLabel">
@@ -618,7 +618,7 @@
       </font>
      </property>
      <property name="text">
-      <string>IPS:</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;IPS:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLabel" name="IngOValue">
@@ -769,7 +769,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Order Activity Status:</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Order Activity Status:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLabel" name="orderStatusValue">
@@ -809,7 +809,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Initial Acquisition Date:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Initial Acquisition Date:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="AcqDateValue">
@@ -850,7 +850,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Subject:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Subject:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="SubjectValue">
@@ -889,7 +889,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Last PO#:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Last PO#:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="PrevPOLabel_2">
@@ -907,7 +907,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Prev. PO#:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;Prev. PO#:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="NumOnOrderLabel">
@@ -925,7 +925,7 @@
      </font>
     </property>
     <property name="text">
-     <string># On Order:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;# On Order:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="NumBackorderLabel">
@@ -943,7 +943,7 @@
      </font>
     </property>
     <property name="text">
-     <string># BO'd:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#5d5d5d;&quot;&gt;# BO'd:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="POValue">
@@ -1070,6 +1070,24 @@
      <string>Mark Sale</string>
     </property>
    </widget>
+   <widget class="QLabel" name="listSizeLabel">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>670</y>
+      <width>341</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Default List Size</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1077,7 +1095,7 @@
      <x>0</x>
      <y>0</y>
      <width>1100</width>
-     <height>21</height>
+     <height>18</height>
     </rect>
    </property>
   </widget>

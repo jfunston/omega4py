@@ -838,6 +838,27 @@
      </font>
     </property>
    </widget>
+   <widget class="QLabel" name="duplicateLabel">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>370</y>
+      <width>261</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#aa0000;&quot;&gt;Duplicate ISBN detected&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -851,6 +872,30 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>titleValue</tabstop>
+  <tabstop>AcqDateValue</tabstop>
+  <tabstop>authorValue</tabstop>
+  <tabstop>PriceValue</tabstop>
+  <tabstop>SubjectValue</tabstop>
+  <tabstop>PublisherValue</tabstop>
+  <tabstop>ISBNValue</tabstop>
+  <tabstop>IngOValue</tabstop>
+  <tabstop>IngTValue</tabstop>
+  <tabstop>IPSValue</tabstop>
+  <tabstop>SaveButton</tabstop>
+  <tabstop>ForgetButton</tabstop>
+  <tabstop>NextRecordButton</tabstop>
+  <tabstop>toOrderValue</tabstop>
+  <tabstop>maxDesiredValue</tabstop>
+  <tabstop>OrderStatusValue</tabstop>
+  <tabstop>lastSaleValue</tabstop>
+  <tabstop>POValue</tabstop>
+  <tabstop>PrevPOValue</tabstop>
+  <tabstop>OnOrderValue</tabstop>
+  <tabstop>BOValue</tabstop>
+  <tabstop>historyValue</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

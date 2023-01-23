@@ -16,7 +16,12 @@ class EnterWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Save", lambda _ : self.save_record(False), 'f10', self.SaveButton)
         self.add_qt_action("Next Record", lambda _ : self.save_record(True), 'Ctrl+return', self.NextRecordButton)
         self.add_qt_action("Close", self.close_action, 'escape', self.ForgetButton)
+        self.add_qt_action("NextFieldReturn", lambda : self.focusNextChild(), 'return')
+        self.add_qt_action("NextFieldEnter", lambda : self.focusNextChild(), 'enter')
+        self.add_qt_action("NextFieldDown", lambda : self.focusNextChild(), 'down')
+        self.add_qt_action("PrevField", lambda : self.focusPreviousChild(), 'up')
         self.ISBNValue.textChanged.connect(self.handle_isbn_change)
+        test = self.titleValue.textCursor()
 
         self.allLabels = []
         self.allLabels.append(self.titleValue)
@@ -60,6 +65,7 @@ class EnterWindow(QtWidgets.QMainWindow):
             self.NextRecordButton.setEnabled(False)
             self.NextRecordButton.setVisible(False)
         self.recordIDValue.setText(str(self.recordID))
+        self.duplicateLabel.setVisible(False)
         self.show()
 
     def close_action(self):
@@ -126,6 +132,7 @@ class EnterWindow(QtWidgets.QMainWindow):
 
     def handle_isbn_change(self, new_text):
         if self.edit_mode or len(new_text) != 13:
+            self.duplicateLabel.setVisible(False)
             return
         try:
             conv_text = int(new_text)
@@ -133,8 +140,9 @@ class EnterWindow(QtWidgets.QMainWindow):
             return
 
         if self.db.check_isbn(new_text):
-            infobox = QtWidgets.QMessageBox
-            infobox.question(self, 'Warning', "ISBN already exists in database", infobox.Ok)
+            self.duplicateLabel.setVisible(True)
+        else:
+            self.duplicateLabel.setVisible(False)
 
         base_api_link = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
         try:
