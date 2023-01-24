@@ -20,8 +20,8 @@ class EnterWindow(QtWidgets.QMainWindow):
         self.add_qt_action("NextFieldEnter", lambda : self.focusNextChild(), 'enter')
         self.add_qt_action("NextFieldDown", lambda : self.focusNextChild(), 'down')
         self.add_qt_action("PrevField", lambda : self.focusPreviousChild(), 'up')
+        self.add_qt_action("Insert Date", self.insert_date, 'alt+d')
         self.ISBNValue.textChanged.connect(self.handle_isbn_change)
-        test = self.titleValue.textCursor()
 
         self.allLabels = []
         self.allLabels.append(self.titleValue)
@@ -66,7 +66,21 @@ class EnterWindow(QtWidgets.QMainWindow):
             self.NextRecordButton.setVisible(False)
         self.recordIDValue.setText(str(self.recordID))
         self.duplicateLabel.setVisible(False)
+        self.setWindowTitle("Change/Enter Record")
         self.show()
+
+    def insert_date(self):
+        box = None
+        for label in self.allLabels:
+            if label.hasFocus() and label is not self.historyValue:
+                box = label
+                break
+        if box is None:
+            return
+        text = box.text()
+        today = date.today().strftime("%m/%d/%y")
+        pos = box.cursorPosition()
+        box.setText(text[:pos] + today + text[pos:])
 
     def close_action(self):
         self.view_window.show()

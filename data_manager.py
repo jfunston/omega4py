@@ -230,6 +230,7 @@ class DataManager():
             self.search_string = ""
             self.search_binding = None
             self.change_index(order_by)
+            return
         like = "%" + search_key + "%"
         self.currentID = 0
         self.currentIndex = order_by
@@ -251,14 +252,15 @@ class DataManager():
         return result[0][0]
 
     def find_replace(self, field, searchKey, replace):
+        self.search_string = ""
+        self.search_binding = None
+        self.change_index(self.currentIndex)
         query = f"UPDATE books SET {field} = ? WHERE {field} = ?"
         cur = self.db.cursor()
         cur.execute(query, (replace, searchKey)).fetchall()
         self.db.commit()
         cur.close()
-        prvIndex = self.currentIndex
-        self.currentIndex = "tmp"
-        self.change_index(prvIndex)
+        self.change_index(self.currentIndex)
 
     def ordercode_search(self):
         where = 'OrderActiv != ""'

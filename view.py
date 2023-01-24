@@ -21,6 +21,7 @@ class FindDialog(QtWidgets.QDialog):
         self.setWindowTitle(f"Find in {title}")
         self.resultCallback = findCallback
         self.add_qt_action("Find Record", self.set_search_key, 'return')
+        self.add_qt_action("Find Record Enter", self.set_search_key, 'enter')
         self.show()
 
     def set_search_key(self):
@@ -87,7 +88,8 @@ class BrowseWindow(QtWidgets.QMainWindow):
             self.browseTable.setItem(i, 0, QTableWidgetItem(record["Title"]))
             self.browseTable.setItem(i, 1, QTableWidgetItem(record["AuthorLast"]))
             self.browseTable.setItem(i, 2, QTableWidgetItem(record["Subj"]))
-            self.browseTable.setItem(i, 3, QTableWidgetItem(str(record["Price"])))
+            self.browseTable.setItem(i, 3, QTableWidgetItem(record["ISBN"]))
+            self.browseTable.setItem(i, 4, QTableWidgetItem(str(record["Price"])))
             i += 1
         self.browseTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.browseTable.verticalHeader().setVisible(False)
@@ -145,6 +147,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Enter", self.open_enter_window, 'e', self.EnterButton)
         self.add_qt_action("Delete", self.delete_record, '', self.DeleteButton)
         self.add_qt_action("Make Sale", self.make_sale, 'alt+d', self.MarkSaleButton)
+        self.add_qt_action("Reset List", self.reset_list, 'alt+t')
         self.add_qt_action("Undo Make Sale", self.undo_sale, 'alt+u')
         self.add_qt_action("Get Info", self.get_info, 'ctrl+i')
         self.add_qt_action("Close", self.close, 'escape')
@@ -164,6 +167,10 @@ class ViewWindow(QtWidgets.QMainWindow):
         if self.enter_window is None:
             self.main_win.show()
         event.accept()
+
+    def reset_list(self):
+        self.db.substring_search(None, None, self.db.currentIndex)
+        self.update_view()
 
     def update_view(self):
         self.setWindowTitle("View Record - " + self.db.currentIndex)
@@ -193,6 +200,8 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.PrevPOValue.setText(record["PrevPoNum"])
         self.OnOrderValue.setText(pretty_int(record["NumOnOrder"]))
         self.BOValue.setText(pretty_int(record["BoNumber"]))
+        list_size = " Records in List"
+        self.listSizeLabel.setText(str(len(self.db.records)) + list_size)
         if self.browse is not None:
             self.browse.update_selected()
 

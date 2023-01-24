@@ -27,7 +27,7 @@
      <set>QAbstractItemView::NoEditTriggers</set>
     </property>
     <property name="columnCount">
-     <number>4</number>
+     <number>5</number>
     </property>
     <column>
      <property name="text">
@@ -46,6 +46,11 @@
     </column>
     <column>
      <property name="text">
+      <string>ISBN</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
       <string>Price</string>
      </property>
     </column>
@@ -57,7 +62,7 @@
      <x>0</x>
      <y>0</y>
      <width>1203</width>
-     <height>29</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

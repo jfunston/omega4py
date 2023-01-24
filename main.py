@@ -1,5 +1,6 @@
 import os
 import shutil
+from datetime import date
 
 from PyQt5 import QtWidgets, uic, QtGui, QtCore
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView, QFileDialog
@@ -23,7 +24,9 @@ class SearchListDialog(QtWidgets.QDialog):
 
         self.setWindowTitle("Search/List")
         self.resultCallback = findCallback
-        self.add_qt_action("Find Record", self.set_search_key, 'return')
+        self.add_qt_action("Search Record", self.set_search_key, 'return')
+        self.add_qt_action("Search Record Enter", self.set_search_key, 'enter')
+        self.add_qt_action("Insert Date", self.insert_date, 'alt+d')
         self.findBox.setFocus()
         self.show()
 
@@ -32,6 +35,12 @@ class SearchListDialog(QtWidgets.QDialog):
         self.resultCallback()
         self.accept()
 
+    def insert_date(self):
+        text = self.findBox.text()
+        today = date.today().strftime("%m/%d/%y")
+        pos = self.findBox.cursorPosition()
+        self.findBox.setText(text[:pos] + today + text[pos:])
+
 @ui_methods
 class FindReplaceDialog(QtWidgets.QDialog):
     def __init__(self, db, parent=None):
@@ -39,10 +48,26 @@ class FindReplaceDialog(QtWidgets.QDialog):
         uic.loadUi('replace.ui', self)
         self.setWindowTitle("Find -> Replace")
         self.db = db
+        self.parent = parent
 
         self.add_qt_action("Find Replace", self.find_replace, 'return')
+        self.add_qt_action("Find Replace Enter", self.find_replace, 'enter')
+        self.add_qt_action("Insert Date", self.insert_date, 'alt+d')
         self.findBox.setFocus()
         self.show()
+
+    def insert_date(self):
+        box = None
+        if self.findBox.hasFocus():
+            box = self.findBox
+        elif self.replaceBox.hasFocus():
+            box = self.replaceBox
+        if box is None:
+            return
+        text = box.text()
+        today = date.today().strftime("%m/%d/%y")
+        pos = box.cursorPosition()
+        box.setText(text[:pos] + today + text[pos:])
 
     def find_replace(self):
         changed = self.db.count_search(self.fieldComboBox.currentText(), self.findBox.text())
@@ -51,6 +76,7 @@ class FindReplaceDialog(QtWidgets.QDialog):
         if ret == confirm.Yes:
             self.db.find_replace(self.fieldComboBox.currentText(), self.findBox.text(), self.replaceBox.text())
         self.accept()
+        self.parent.update_view()
 
 @ui_methods
 class MainWindow(QtWidgets.QMainWindow):
@@ -121,16 +147,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.view.show()
         self.close()
 
-    def search_callback(self, searchKey):
-        self.db.substring_search(searchKey)
+    def search_callback(self):
         self.update_view()
+        self.view_records()
 
     def ordercode_nonempty(self):
         self.db.ordercode_search()
         self.update_view()
 
     def search_records(self):
-        find = SearchListDialog(lambda : self.update_view(), self.db, self)
+        find = SearchListDialog(self.search_callback, self.db, self)
         find.show()
 
     def find_replace(self):
