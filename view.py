@@ -151,6 +151,8 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Undo Make Sale", self.undo_sale, 'alt+u')
         self.add_qt_action("Get Info", self.get_info, 'ctrl+i')
         self.add_qt_action("Close", self.close, 'escape')
+        self.actionBook_Information.triggered.connect(self.get_info)
+        self.actionReset_List.triggered.connect(self.reset_list)
 
         self.browse = None
         self.enter_window = None
@@ -169,7 +171,7 @@ class ViewWindow(QtWidgets.QMainWindow):
         event.accept()
 
     def reset_list(self):
-        self.db.substring_search(None, None, self.db.currentIndex)
+        self.db.substring_search(None, None, "Title")
         self.update_view()
 
     def update_view(self):

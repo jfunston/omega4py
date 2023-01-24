@@ -1098,8 +1098,26 @@
      <height>18</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View..</string>
+    </property>
+    <addaction name="actionBook_Information"/>
+    <addaction name="actionReset_List"/>
+   </widget>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionBook_Information">
+   <property name="text">
+    <string>Book Information (Ctrl-i)</string>
+   </property>
+  </action>
+  <action name="actionReset_List">
+   <property name="text">
+    <string>Reset List (Cmd-t)</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
