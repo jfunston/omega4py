@@ -213,7 +213,10 @@ class DataManager():
             searchKey = searchKey.lower()
             self.currentID = bisect_left(self.records, searchKey, key= lambda x: x[searchIndex].lower())
         else:
-            self.currentID = bisect_left(self.records, int(searchKey), key= lambda x: x[searchIndex])
+            try:
+                self.currentID = bisect_left(self.records, int(searchKey), key= lambda x: x[searchIndex])
+            except ValueError:
+                pass
 
     def delete_current_record(self):
         cur = self.db.cursor()

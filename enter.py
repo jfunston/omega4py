@@ -195,7 +195,7 @@ class EnterWindow(QtWidgets.QMainWindow):
         record["Pub"] = self.PublisherValue.text()
         record["AcquisDate"] = self.AcqDateValue.text()
         record["ISBN"] = self.ISBNValue.text()
-        record["Subj"] = self.SubjectValue.text()
+        record["Subj"] = self.SubjectValue.text().upper()
         record["LstSaleDate"] = self.lastSaleValue.text()
         record["PoNum"] = self.POValue.text()
         record["SalesHist"] = self.historyValue.toPlainText()
