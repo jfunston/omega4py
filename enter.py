@@ -145,6 +145,20 @@ class EnterWindow(QtWidgets.QMainWindow):
             raise ValueError(f"Record not saved, {value_name} must be a number or empty")
         return converted
 
+    def format_title(self, title):
+        try:
+            the = title.find("the")
+            The = title.find("The")
+            if (the == 0 or The == 0) and len(title) > 4 and title[3] == ' ':
+                return title[4:] + ", The"
+            a = title.find("a")
+            A = title.find("A")
+            if (a == 0 or A == 0) and len(title) > 2 and title[1] == ' ':
+                return title[2:] + ", A"
+        except:
+            return title
+        return title
+
     def handle_isbn_change(self, new_text):
         if self.edit_mode or len(new_text) != 13:
             self.duplicateLabel.setVisible(False)
@@ -168,7 +182,7 @@ class EnterWindow(QtWidgets.QMainWindow):
             obj = json.loads(decoded_text) # deserializes decoded_text to a Python object
             volume_info = obj["items"][0]["volumeInfo"]
             author = volume_info["authors"][0]
-            title = volume_info["title"]
+            title = self.format_title(volume_info["title"])
             publisher = volume_info["publisher"]
         except:
             return
