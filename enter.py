@@ -1,3 +1,5 @@
+import string
+
 from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
 from util import ui_methods, pretty_int, pretty_bool
@@ -68,6 +70,7 @@ class EnterWindow(QtWidgets.QMainWindow):
         self.recordIDValue.setText(str(self.recordID))
         self.duplicateLabel.setVisible(False)
         self.setWindowTitle("Change/Enter Record")
+        self.last_index = self.db.currentIndex
         self.show()
 
     def insert_date(self):
@@ -150,14 +153,14 @@ class EnterWindow(QtWidgets.QMainWindow):
             the = title.find("the")
             The = title.find("The")
             if (the == 0 or The == 0) and len(title) > 4 and title[3] == ' ':
-                return title[4:] + ", The"
+                return string.capwords(title[4:] + ", The")
             a = title.find("a")
             A = title.find("A")
             if (a == 0 or A == 0) and len(title) > 2 and title[1] == ' ':
-                return title[2:] + ", A"
+                return string.capwords(title[2:] + ", A")
         except:
-            return title
-        return title
+            return string.capwords(title)
+        return string.capwords(title)
 
     def handle_isbn_change(self, new_text):
         if self.edit_mode or len(new_text) != 13:
@@ -240,6 +243,7 @@ class EnterWindow(QtWidgets.QMainWindow):
             self.view_window.set_index("RecordID")
             self.db.set_current_id(len(self.db.records)-1)
         if not next_record:
+            self.view_window.set_index(self.last_index)
             self.view_window.update_view()
             self.close_action()
             return

@@ -218,6 +218,9 @@ class DataManager():
             except ValueError:
                 pass
 
+        if self.currentID >= len(self.records):
+            self.currentID = len(self.records) - 1
+
     def delete_current_record(self):
         cur = self.db.cursor()
         cur.execute("DELETE FROM books WHERE RecordID = " + str(self.get_current_record()["RecordID"]))
