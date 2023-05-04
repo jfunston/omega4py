@@ -243,7 +243,8 @@ class EnterWindow(QtWidgets.QMainWindow):
             self.view_window.set_index("RecordID")
             self.db.set_current_id(len(self.db.records)-1)
         if not next_record:
-            self.view_window.set_index(self.last_index)
+            if not self.edit_mode:
+                self.view_window.set_index(self.last_index)
             self.view_window.update_view()
             self.close_action()
             return
