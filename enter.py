@@ -46,6 +46,9 @@ class EnterWindow(QtWidgets.QMainWindow):
         self.allLabels.append(self.PrevPOValue)
         self.allLabels.append(self.OnOrderValue)
         self.allLabels.append(self.BOValue)
+        self.allLabels.append(self.WebsiteValue)
+        self.allLabels.append(self.LocationValue)
+        self.allLabels.append(self.StorageValue)
 
         default_style = self.recordIDValue.styleSheet()
         for label in self.allLabels:
@@ -113,10 +116,13 @@ class EnterWindow(QtWidgets.QMainWindow):
         self.IngOValue.setText(pretty_bool(record["IngO"]))
         self.IngTValue.setText(pretty_bool(record["IngT"]))
         self.IPSValue.setText(pretty_bool(record["IPS"]))
+        self.WebsiteValue.setText(record["Website"])
         self.POValue.setText(record["PoNum"])
         self.PrevPOValue.setText(record["PrevPoNum"])
         self.OnOrderValue.setText(pretty_int(record["NumOnOrder"]))
         self.BOValue.setText(pretty_int(record["BoNumber"]))
+        self.StorageValue.setText(pretty_int(record["Storage"]))
+        self.LocationValue.setText(record["Location"])
 
     def yn_to_int(self, value, value_name):
         if value == 'y' or value == 'Y' or value == '1':
@@ -218,10 +224,13 @@ class EnterWindow(QtWidgets.QMainWindow):
         record["SalesHist"] = self.historyValue.toPlainText()
         record["OrderActiv"] = self.OrderStatusValue.text()
         record["PrevPoNum"] = self.PrevPOValue.text()
+        record["Location"] = self.LocationValue.text()
+        record["Website"] = self.WebsiteValue.text()
         try:
             record["MxNumber"] = self.to_int(self.maxDesiredValue.text(), "Max # Desired")
             record["NumberSold"] = self.to_int(self.toOrderValue.text(), "Number Sold")
             record["NumOnOrder"] = self.to_int(self.OnOrderValue.text(), "# on Order")
+            record["Storage"] = self.to_int(self.StorageValue.text(), "Storage")
             record["BoNumber"] = self.to_int(self.BOValue.text(), "# BO'd")
             record["IPS"] = self.yn_to_int(self.IPSValue.text(), "IPS")
             record["IngO"] = self.yn_to_int(self.IngOValue.text(), "IngOR")

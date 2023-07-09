@@ -168,6 +168,7 @@ class MainWindow(QtWidgets.QMainWindow):
 if __name__ == '__main__':
     db = DataManager(r"bookinv.db")
     db.change_index("Title")
+    db.try_schema()
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     app = QtWidgets.QApplication(sys.argv)
     app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)

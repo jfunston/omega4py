@@ -198,10 +198,13 @@ class ViewWindow(QtWidgets.QMainWindow):
         self.IngOValue.setText(pretty_bool(record["IngO"]))
         self.IngTValue.setText(pretty_bool(record["IngT"]))
         self.IPSValue.setText(pretty_bool(record["IPS"]))
+        self.websiteValue.setText(record["Website"])
         self.POValue.setText(record["PoNum"])
         self.PrevPOValue.setText(record["PrevPoNum"])
         self.OnOrderValue.setText(pretty_int(record["NumOnOrder"]))
         self.BOValue.setText(pretty_int(record["BoNumber"]))
+        self.storageValue.setText(pretty_int(record["Storage"]))
+        self.locationValue.setText(record["Location"])
         list_size = " Records in List"
         self.listSizeLabel.setText(str(len(self.db.records)) + list_size)
         if self.browse is not None:

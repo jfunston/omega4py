@@ -60,6 +60,12 @@ class Record():
             return self.data[24]
         elif item == "IngT":
             return self.data[25]
+        elif item == "Website":
+            return self.data[27]
+        elif item == "Storage":
+            return self.data[28]
+        elif item == "Location":
+            return self.data[29]
         return None
 
 
@@ -293,7 +299,7 @@ class DataManager():
         record = regularize_user_record(record)
 
         cur = self.db.cursor()
-        cur.execute("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        cur.execute("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (record["RecordID"], record["Title"], record["AuthorLast"], record["Pub"], record["AcquisDate"], record["ISBN"],
                     record["Subj"], \
                     record["Price"], record["LstSaleDate"], record["MxNumber"], record["NumberSold"],
@@ -302,7 +308,8 @@ class DataManager():
                     record["PrevPoNum"], record["OurPrice"], \
                     record["OrderInfo"], record["Discount"], record["ISBN13"], record["PW"], record["IPS"],
                     record["IngO"], \
-                    record["IngT"], record["DoDelete"]))
+                    record["IngT"], record["DoDelete"], \
+                    record["Website"], record["Storage"], record["Location"]))
         self.db.commit()
         cur.close()
 
@@ -311,7 +318,7 @@ class DataManager():
             record = regularize_user_record(record)
 
         cur = self.db.cursor()
-        cur.execute("UPDATE books SET Title = ?, AuthorLast = ?, Pub = ?, AcquisDate = ?, ISBN = ?, Subj = ?, Price = ?, LstSaleDate = ?, MxNumber = ?, NumberSold = ?, NumOnOrder = ?, BoNumber = ?, BackOrder = ?, PoNum = ?, SalesHist = ?, OrderActiv = ?, PrevPoNum = ?, OurPrice = ?, OrderInfo = ?, Discount = ?, ISBN13 = ?, PW = ?, IPS = ?, IngO = ?, IngT = ?, DoDelete = ? WHERE RecordID = ?",
+        cur.execute("UPDATE books SET Title = ?, AuthorLast = ?, Pub = ?, AcquisDate = ?, ISBN = ?, Subj = ?, Price = ?, LstSaleDate = ?, MxNumber = ?, NumberSold = ?, NumOnOrder = ?, BoNumber = ?, BackOrder = ?, PoNum = ?, SalesHist = ?, OrderActiv = ?, PrevPoNum = ?, OurPrice = ?, OrderInfo = ?, Discount = ?, ISBN13 = ?, PW = ?, IPS = ?, IngO = ?, IngT = ?, DoDelete = ?, website = ?, storage = ?, location = ? WHERE RecordID = ?",
                     (record["Title"], record["AuthorLast"], record["Pub"], record["AcquisDate"], record["ISBN"],
                     record["Subj"], \
                     record["Price"], record["LstSaleDate"], record["MxNumber"], record["NumberSold"],
@@ -320,10 +327,33 @@ class DataManager():
                     record["PrevPoNum"], record["OurPrice"], \
                     record["OrderInfo"], record["Discount"], record["ISBN13"], record["PW"], record["IPS"],
                     record["IngO"], \
-                    record["IngT"], record["DoDelete"], record["RecordID"]))
+                    record["IngT"], record["DoDelete"], \
+                    record["Website"], record["Storage"], record["Location"], record["RecordID"]))
         self.db.commit()
         cur.close()
         self.refresh_cur_record()
+
+    def update_schema(self):
+        con = sqlite3.connect("bookinv.db")
+        cur = con.cursor()
+        cur.execute("ALTER TABLE books ADD COLUMN website TEXT")
+        cur.execute("ALTER TABLE books ADD COLUMN storage INTEGER")
+        cur.execute("ALTER TABLE books ADD COLUMN location TEXT")
+        con.commit()
+        con.close()
+
+    def try_schema(self):
+        con = sqlite3.connect("bookinv.db")
+        cur = con.cursor()
+        for r in cur.execute("SELECT * FROM books LIMIT 1").fetchall():
+            record = Record(r)
+            try:
+                test = record["Location"]
+            except:
+                con.close()
+                self.update_schema()
+                return
+        con.close()
 
     def convert_db(self):
         con = sqlite3.connect("bookinv.db")
