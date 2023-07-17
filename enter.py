@@ -70,6 +70,8 @@ class EnterWindow(QtWidgets.QMainWindow):
             self.NextRecordButton.setEnabled(False)
             self.NextRecordButton.setVisible(False)
             self.OrderStatusValue.setFocus()
+        else:
+            self.ISBNValue.setFocus()
         self.recordIDValue.setText(str(self.recordID))
         self.duplicateLabel.setVisible(False)
         self.setWindowTitle("Change/Enter Record")

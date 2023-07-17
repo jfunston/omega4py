@@ -78,6 +78,55 @@ class FindReplaceDialog(QtWidgets.QDialog):
         self.accept()
         self.parent.update_view()
 
+
+@ui_methods
+class FillPODialog(QtWidgets.QDialog):
+    def __init__(self, db, parent=None):
+        super(FillPODialog, self).__init__(parent)
+        uic.loadUi('fill_po.ui', self)
+        self.setWindowTitle("Fill PO by Order Status")
+        self.db = db
+        self.parent = parent
+
+        self.add_qt_action("Find Replace", self.fill_po, 'return')
+        self.add_qt_action("Find Replace Enter", self.fill_po, 'enter')
+        self.findBox.setFocus()
+        self.show()
+
+    def fill_po(self):
+        changed = self.db.count_search("OrderActiv", self.findBox.text())
+        confirm = QtWidgets.QMessageBox
+        ret = confirm.question(self, 'Fill PO Confirmation', f"Are you sure? This will affect {changed} record(s).", confirm.Yes | confirm.No)
+        if ret == confirm.Yes:
+            self.db.fill_po_by_order_status(self.findBox.text(), self.replaceBox.text())
+        self.accept()
+        self.parent.update_view()
+
+
+@ui_methods
+class DeleteByOrderStatusDialog(QtWidgets.QDialog):
+    def __init__(self, db, parent=None):
+        super(DeleteByOrderStatusDialog, self).__init__(parent)
+        uic.loadUi('order_status_delete.ui', self)
+        self.setWindowTitle("Delete Records by Order Status")
+        self.db = db
+        self.parent = parent
+
+        self.add_qt_action("Do Delete", self.delete_records, 'return')
+        self.add_qt_action("Do Delete", self.delete_records, 'enter')
+        self.findBox.setFocus()
+        self.show()
+
+    def delete_records(self):
+        changed = self.db.count_search("OrderActiv", self.findBox.text())
+        confirm = QtWidgets.QMessageBox
+        ret = confirm.question(self, 'Delete Confirmation', f"Are you sure? This will DELETE {changed} record(s).", confirm.Yes | confirm.No)
+        if ret == confirm.Yes:
+            self.db.delete_records_by_order_status(self.findBox.text())
+        self.accept()
+        self.parent.update_view()
+
+
 @ui_methods
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, db):
@@ -93,6 +142,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.add_qt_action("Search Records", self.search_records, 's', self.SearchButton)
         self.add_qt_action("List Non-Empty Order Code", self.ordercode_nonempty, '', self.ListNonEmptyOrderButton)
         self.add_qt_action("Find Replace", self.find_replace, '', self.FindReplaceButton)
+        self.add_qt_action("Fill PO", self.fill_po_by_order_status, '', self.FillPObyOrderStatusButton)
+        self.add_qt_action("Delete by Order Status", self.delete_by_order_status, '', self.DeletebyOrderStatusButton)
         self.actionLoad_A4_DB.triggered.connect(self.load_a4_db)
         self.actionSave_Backup.triggered.connect(self.save_backup)
         self.actionLoad_Backup.triggered.connect(self.load_backup)
@@ -164,6 +215,19 @@ class MainWindow(QtWidgets.QMainWindow):
         replace = FindReplaceDialog(self.db, self)
         replace.show()
 
+    def fill_po_by_order_status(self):
+        fill_po = FillPODialog(self.db, self)
+        fill_po.show()
+
+    def find_replace(self):
+        shutil.copyfile("bookinv.db", "find_replace_backup.db")
+        replace = FindReplaceDialog(self.db, self)
+        replace.show()
+
+    def delete_by_order_status(self):
+        shutil.copyfile("bookinv.db", "delete_order_status_backup.db")
+        delete_by = DeleteByOrderStatusDialog(self.db, self)
+        delete_by.show()
 
 if __name__ == '__main__':
     db = DataManager(r"bookinv.db")

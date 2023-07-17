@@ -237,6 +237,21 @@ class DataManager():
             self.currentID = len(self.records) - 1
         self.totalRecords -= 1
 
+    def delete_records_by_order_status(self, order_status):
+        cur = self.db.cursor()
+        cur.execute("DELETE FROM books WHERE OrderActiv = ?", (order_status,))
+        self.db.commit()
+        self.records = []
+        for record in cur.execute("SELECT * FROM books").fetchall():
+            self.records.append(Record(record))
+        cur.close()
+        self.currentID = 0
+        self.validIndexes = ["RecordID", "Title", "AuthorLast", "Subj+Title", "Pub+Title", "OrderActiv", "ISBN"]
+        self.currentIndex = "RecordID"
+        self.totalRecords = len(self.records)
+        self.search_string = ""
+        self.search_binding = None
+
     def substring_search(self, search_field, search_key, order_by):
         if search_key is None or search_key == "":
             self.search_string = ""
@@ -268,6 +283,17 @@ class DataManager():
         self.search_binding = None
         self.change_index(self.currentIndex)
         query = f"UPDATE books SET {field} = ? WHERE {field} = ?"
+        cur = self.db.cursor()
+        cur.execute(query, (replace, searchKey)).fetchall()
+        self.db.commit()
+        cur.close()
+        self.change_index(self.currentIndex)
+
+    def fill_po_by_order_status(self, searchKey, replace):
+        self.search_string = ""
+        self.search_binding = None
+        self.change_index(self.currentIndex)
+        query = f"UPDATE books SET PoNum = ? WHERE OrderActiv = ?"
         cur = self.db.cursor()
         cur.execute(query, (replace, searchKey)).fetchall()
         self.db.commit()
