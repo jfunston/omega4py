@@ -90,6 +90,7 @@ class BrowseWindow(QtWidgets.QMainWindow):
             self.browseTable.setItem(i, 2, QTableWidgetItem(record["Subj"]))
             self.browseTable.setItem(i, 3, QTableWidgetItem(record["ISBN"]))
             self.browseTable.setItem(i, 4, QTableWidgetItem(str(record["Price"])))
+            self.browseTable.setItem(i, 5, QTableWidgetItem(str(record["LstSaleDate"])))
             i += 1
         self.browseTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.browseTable.verticalHeader().setVisible(False)

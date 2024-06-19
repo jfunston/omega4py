@@ -52,6 +52,11 @@
      <string>Subj</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>LstSaleDate</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="fieldLabel">
    <property name="geometry">
@@ -159,6 +164,11 @@
    <item>
     <property name="text">
      <string>Subj</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>LstSaleDate</string>
     </property>
    </item>
   </widget>

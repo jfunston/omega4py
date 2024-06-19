@@ -27,7 +27,7 @@
      <set>QAbstractItemView::NoEditTriggers</set>
     </property>
     <property name="columnCount">
-     <number>5</number>
+     <number>6</number>
     </property>
     <column>
      <property name="text">
@@ -52,6 +52,11 @@
     <column>
      <property name="text">
       <string>Price</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Last Sale</string>
      </property>
     </column>
    </widget>
