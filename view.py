@@ -91,6 +91,13 @@ class BrowseWindow(QtWidgets.QMainWindow):
             self.browseTable.setItem(i, 3, QTableWidgetItem(record["ISBN"]))
             self.browseTable.setItem(i, 4, QTableWidgetItem(str(record["Price"])))
             self.browseTable.setItem(i, 5, QTableWidgetItem(str(record["LstSaleDate"])))
+            mxnumber = 0 if record["MxNumber"] is None else record["MxNumber"]
+            numbersold = 0 if record["NumberSold"] is None else record["NumberSold"]
+            onorder = 0 if record["NumOnOrder"] is None else record["NumOnOrder"]
+            storage = 0 if record["Storage"] is None else record["Storage"]
+            backorder = 0 if record["BoNumber"] is None else record["BoNumber"]
+            on_shelf = mxnumber - numbersold - onorder - storage - backorder
+            self.browseTable.setItem(i, 6, QTableWidgetItem(str(on_shelf)))
             i += 1
         self.browseTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.browseTable.verticalHeader().setVisible(False)
@@ -125,9 +132,15 @@ class BrowseWindow(QtWidgets.QMainWindow):
     def send_to_excel(self):
         filename = "omega_print_tmp_file.csv"
         with open(filename, 'w') as f:
-            f.write("Title, AuthorLast, Subj, Price\n")
+            f.write("Title, AuthorLast, Subj, Price, Last Sale, On Shelf\n")
             for record in self.db.records:
-                f.write(f"{record['Title']}, {record['AuthorLast']}, {record['Subj']}, {record['Price']}\n")
+                mxnumber = 0 if record["MxNumber"] is None else record["MxNumber"]
+                numbersold = 0 if record["NumberSold"] is None else record["NumberSold"]
+                onorder = 0 if record["NumOnOrder"] is None else record["NumOnOrder"]
+                storage = 0 if record["Storage"] is None else record["Storage"]
+                backorder = 0 if record["BoNumber"] is None else record["BoNumber"]
+                on_shelf = mxnumber - numbersold - onorder - storage - backorder
+                f.write(f"{record['Title']}, {record['AuthorLast']}, {record['Subj']}, {record['Price']}, {record['LstSaleDate']}, {on_shelf}\n")
         os.startfile(filename)
 
 @ui_methods
